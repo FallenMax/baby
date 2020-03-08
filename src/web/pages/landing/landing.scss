@@ -1,0 +1,124 @@
+#landing {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('../../assets/bg_colorful.png');
+
+  main {
+    margin-top: 30vh;
+    @media screen and (max-width: 450px) {
+      margin-top: 20vh;
+    }
+  }
+
+  .desc {
+    margin-top: 10px;
+    font-size: 12px;
+    text-align: center;
+    color: #888;
+  }
+
+  .login-register-forms {
+    position: relative;
+    width: 220px;
+    min-height: 200px;
+    form {
+      margin-top: 70px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 1;
+      transform: none;
+      z-index: 1;
+
+      .password-hint {
+        font-size: 12px;
+        text-align: center;
+        color: #888;
+      }
+      .register-button {
+        margin-top: 28px;
+        font-size: 14px;
+        // padding: 0px;
+        // width: fit-content;
+        background: var(--color-theme);
+        color: white;
+      }
+    }
+  }
+
+  .button-about {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    // color: white;
+    font-weight: bold;
+    user-select: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .about-page {
+    --transition-enter-duration: 1s;
+    --transition-leave-duration: 0.3s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.36);
+    padding: 0 20px;
+    pointer-events: none;
+    opacity: 0;
+    transition: all var(--transition-leave-duration);
+    &.is-active {
+      pointer-events: initial;
+      opacity: 1;
+      .about-text {
+        &::before,
+        &::after {
+          width: 100%;
+          transition: all var(--transition-enter-duration);
+        }
+      }
+      transition: all var(--transition-enter-duration);
+    }
+    .about-text {
+      position: relative;
+      max-width: 615px;
+      text-align: center;
+      font-size: 35px;
+      @media screen and (max-width: 450px) {
+        font-size: 22px;
+      }
+      font-family: inherit;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 20px 0;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      .logo-name {
+        font-weight: bold;
+        color: white;
+      }
+      &::before,
+      &::after {
+        content: ' ';
+        display: block;
+        height: 1px;
+        background: white;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        transition: all var(--transition-leave-duration);
+      }
+      &::before {
+        top: 0;
+      }
+      &::after {
+        bottom: 0;
+      }
+    }
+  }
+}

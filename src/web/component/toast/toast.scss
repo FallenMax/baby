@@ -1,0 +1,18 @@
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  // background: red;
+  z-index: 100;
+  transition: transform 0.3s;
+  transform: translate3d(-50%, -100px, 0);
+  will-change: transform;
+  font-size: 16px;
+  &.is-active {
+    transform: translate3d(-50%, 0, 0);
+  }
+  .toast-content {
+    color: white;
+    padding: 10px 20px;
+  }
+}

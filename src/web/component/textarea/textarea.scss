@@ -1,0 +1,18 @@
+.textarea {
+  padding: 8px 12px;
+  border-radius: 0;
+  box-shadow: none;
+  appearance: none;
+  width: 400px;
+  max-width: 100%;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background-color: white;
+  border: 1px solid black;
+
+  @media screen and (max-width: 450px) {
+    width: 100%;
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      {
+        if (location.href.includes('debug')) {
+          const src = '//cdn.jsdelivr.net/npm/eruda'
+          document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>')
+          document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>')
+        }
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="baby" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="theme-color" content="#edeef0" />
+    <title>baby</title>
+    <link rel="apple-touch-icon" href="./assets/favicon.png" />
+    <link rel="apple-touch-startup-image" href="./assets/bg_colorful.png" />
+    <link rel="icon" sizes="192x192" href="./assets/favicon.png" />
+    <link
+      rel="preload"
+      href="./assets/fg_virgil-webfont.woff2"
+      importance="high"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./style/normalize.css" />
+    <link rel="stylesheet" href="./style/flex.scss" />
+    <link rel="stylesheet" href="./style/global.scss" />
+    <script defer src="./app.ts"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-84154809-6"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+      gtag('config', 'UA-84154809-6')
+    </script>
+  </head>
+
+  <body></body>
+</html>

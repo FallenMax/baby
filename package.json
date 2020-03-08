@@ -1,0 +1,110 @@
+{
+  "name": "baby",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
+  "scripts": {
+    "start": "yarn && export NODE_ENV=development && yarn run server:watch & yarn run web:watch & yarn run lint:watch",
+    "serve": "node ./server/server.js",
+    "clean": "rm -rf public common server bundle.zip",
+    "prebuild": "yarn run clean",
+    "build": "export NODE_ENV=production && yarn run server:build && yarn run web:build",
+    "lint": "yarn run lint:web && yarn run lint:server",
+    "lint:watch": "yarn run lint:web --watch & yarn run lint:server --watch",
+    "lint:web": "tsc --noEmit -p ./src/tsconfig.web.json",
+    "lint:server": "tsc --noEmit -p ./src/tsconfig.server.json",
+    "test": "export NODE_ENV=test PORT=4444 && jest --detectOpenHandles",
+    "test:watch": "export NODE_ENV=test PORT=4444  && jest --watch --verbose false",
+    "server:build": "tsc --project ./src/tsconfig.server.json",
+    "server:watch": "ts-node-dev --transpileOnly --no-notify ./src/server/server.ts",
+    "web:build": "parcel build src/web/index.html --out-dir public --public-url '/public' --no-source-maps --detailed-report 10",
+    "web:watch": "parcel src/web/index.html --out-dir public --public-url '/public' --open",
+    "deploy": "./scripts/deploy.sh"
+  },
+  "dependencies": {
+    "@koa/cors": "^3.0.0",
+    "@koa/multer": "^2.0.2",
+    "@koa/router": "^8.0.7",
+    "@sendgrid/mail": "^6.5.2",
+    "axios": "^0.19.2",
+    "fast-deep-equal": "^3.1.1",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-compress": "^3.0.0",
+    "koa-helmet": "^5.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-send": "^5.0.0",
+    "koa-session": "^5.13.1",
+    "mithril": "^2.0.4",
+    "mkdirp": "^1.0.3",
+    "multer": "^1.4.2",
+    "nedb": "^1.8.0",
+    "papaparse": "^5.1.1",
+    "uuid": "^3.4.0",
+    "wired-elements": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/helper-module-transforms": "^7.8.3",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "@types/hammerjs": "^2.0.36",
+    "@types/jest": "^25.1.2",
+    "@types/koa": "2.11.0",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-compress": "^2.0.9",
+    "@types/koa-helmet": "^3.1.2",
+    "@types/koa-logger": "^3.1.1",
+    "@types/koa-send": "^4.1.2",
+    "@types/koa-session": "^5.10.1",
+    "@types/koa__cors": "^3.0.1",
+    "@types/koa__multer": "^2.0.1",
+    "@types/koa__router": "^8.0.2",
+    "@types/mithril": "^2.0.2",
+    "@types/mkdirp": "^0.5.2",
+    "@types/nedb": "^1.8.9",
+    "@types/node": "^13.7.0",
+    "@types/papaparse": "^5.0.3",
+    "@types/uuid": "^3.4.7",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^1.19.1",
+    "sass": "^1.25.0",
+    "ts-jest": "^25.2.0",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.5"
+  },
+  "jest": {
+    "testURL": "http://localhost/",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": ".*\\.test.(js|jsx|ts|tsx)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/server/",
+      "<rootDir>/web/",
+      "<rootDir>/data/",
+      "<rootDir>/.cache/"
+    ],
+    "globals": {
+      "ts-jest": {}
+    }
+  },
+  "author": "FallenMax@gmail.com",
+  "license": "ISC",
+  "description": "baby"
+}

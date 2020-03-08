@@ -1,0 +1,26 @@
+.navigation {
+  .navigation-bar-placeholder {
+    height: 40px;
+  }
+  .navigation-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    z-index: 1;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    background-color: white;
+    background-image: url('../../assets/bg_colorful.png');
+    .left,
+    .center,
+    .right {
+      white-space: nowrap;
+      overflow: visible;
+    }
+    box-shadow: 0 0 3px #00000045;
+  }
+}

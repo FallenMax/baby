@@ -1,0 +1,22 @@
+.field {
+  + .field {
+    margin-top: 10px;
+  }
+  .hint {
+    font-size: 12px;
+    font-weight: bold;
+    min-height: 12px;
+    margin-bottom: 2px;
+    color: var(--color-theme);
+    @media screen and (max-width: 450px) {
+      font-size: 14px;
+      min-height: 16px;
+    }
+    &.error {
+      color: #ff4343;
+    }
+  }
+  > input {
+    width: 100%;
+  }
+}

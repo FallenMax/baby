@@ -1,0 +1,13 @@
+.DS_Store
+node_modules
+*.log
+*.zip
+.cache
+.idea
+.vscode
+.parcel-cache
+/public
+/server
+/common
+/data
+/upload

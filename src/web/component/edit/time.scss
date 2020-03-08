@@ -1,0 +1,26 @@
+.time-editor {
+  overflow: hidden;
+  --wired-link-decoration-color: var(--color-strong);
+  input.time,
+  input.date {
+    position: fixed;
+    left: -9999px;
+  }
+  .date-display,
+  .time-display {
+    margin-left: 10px;
+  }
+  .time-slider {
+    padding: 0;
+    width: 100%;
+    --wired-slider-knob-color: var(--color-strong, --color-theme);
+    --wired-slider-knob-zero-color: var(--color-strong, --color-theme);
+    --wired-slider-bar-color: #888;
+  }
+  .time-slider-labels {
+    font-size: 14px;
+    color: #888;
+    margin-top: 10px;
+    margin-bottom: -10px;
+  }
+}

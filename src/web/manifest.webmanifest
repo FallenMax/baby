@@ -1,0 +1,10 @@
+{
+  "name": "baby",
+  "short_name": "baby",
+  "description": "baby nursing records",
+  "display": "standalone",
+  "background_color": "#404f58",
+  "theme_color": "#38369D",
+  "start_url": "/",
+  "scope": "/"
+}

@@ -1,0 +1,24 @@
+#eat {
+  --color-strong: #82c91e;
+  min-height: 100vh;
+  .title {
+    width: 100px;
+    height: 30px;
+    // color: white;
+    font-size: 22px;
+    color: var(--color-strong);
+    overflow: visible;
+    white-space: nowrap;
+  }
+  .eat-form {
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 400px;
+
+    .divider {
+      color: #eee;
+      margin: 40px 0;
+    }
+  }
+}

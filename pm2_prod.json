@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "baby",
+      "script": "./server/server.js",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": "5000",
+        "DATA_DIR": "/var/lib/baby/data",
+        "UPLOAD_DIR": "/var/lib/baby/upload"
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+.option-editor {
+  .option {
+    text-align: center;
+    font-size: 16px;
+    margin-left: 10px;
+    border: none;
+    min-height: 50px;
+    min-width: 70px;
+    padding: 0 10px;
+    &.is-selected {
+      color: white;
+    }
+  }
+}

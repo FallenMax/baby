@@ -1,0 +1,158 @@
+/**
+ * A simple Flex wrapper
+ **/
+
+/**
+ * 1.Properties for containers
+ */
+
+// 1.1 （★required）direction of (M)ain-axis
+.f-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.f-col {
+  display: flex;
+  flex-direction: column;
+}
+
+// 1.2 allow wrap?
+.f-wrap {
+  flex-wrap: wrap;
+}
+
+.f-nowrap {
+  flex-wrap: nowrap;
+}
+
+// 1.3 alignment for (M)ain-axis
+.f-m-start {
+  justify-content: flex-start;
+}
+
+.f-m-center {
+  justify-content: center;
+}
+
+.f-m-end {
+  justify-content: flex-end;
+}
+
+.f-m-between {
+  justify-content: space-between;
+}
+
+.f-m-around {
+  justify-content: space-around;
+}
+
+// 1.4 alignment for (C)ross-axis
+.f-c-stretch {
+  align-items: stretch;
+}
+
+.f-c-start {
+  align-items: flex-start;
+}
+
+.f-c-center {
+  align-items: center;
+}
+
+.f-c-end {
+  align-items: flex-end;
+}
+
+.f-c-baseline {
+  align-items: baseline;
+}
+
+// 1.5 alignment for (C)ross-axis (L)ines (multiple)
+.f-cl-stretch {
+  align-content: stretch;
+}
+
+.f-cl-start {
+  align-content: flex-start;
+}
+
+.f-cl-center {
+  align-content: center;
+}
+
+.f-cl-end {
+  align-content: flex-end;
+}
+
+.f-cl-between {
+  align-content: space-between;
+}
+
+.f-cl-around {
+  align-content: space-around;
+}
+
+/**
+ * 2. Properties for child element
+ */
+
+// 2.1 (O)rder, (.f-o-1 ~ .f-o-6)
+@for $i from 1 through 6 {
+  .f-o-#{$i} {
+    order: $i;
+  }
+}
+
+// 2.2 allocation of space, .f-1 ~ .f-6
+@for $i from 0 through 6 {
+  .f-#{$i} {
+    flex-basis: 0; // reset space already taken
+    flex-grow: $i;
+  }
+}
+
+// 2.3 alignmentof (S)elf inside a flexbox
+.f-s-stretch {
+  align-self: stretch;
+}
+
+.f-s-start {
+  align-self: flex-start;
+}
+
+.f-s-center {
+  align-self: center;
+}
+
+.f-s-end {
+  align-self: flex-end;
+}
+
+.f-s-baseline {
+  align-self: baseline;
+}
+
+/**
+ * 3. a few commonly used shortcuts!
+ */
+
+// 3.1 Centering
+// children use row direction, vertical center
+.f-v-center {
+  display: flex;
+  align-items: center;
+}
+
+// children use row direction, horizontal center
+.f-h-center {
+  display: flex;
+  justify-content: center;
+}
+
+// children use row direction, vertical & horizontal center
+.f-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

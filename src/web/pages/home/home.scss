@@ -1,0 +1,64 @@
+#home {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('../../assets/bg_colorful.png');
+  .page-content {
+    margin-top: calc((100vh - 500px) / 2);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    max-width: 400px;
+  }
+  .actions {
+    .action-row {
+      height: 200px;
+      margin-bottom: 10px;
+      .action + .action {
+        margin-left: 10px;
+      }
+
+      .action {
+        color: white;
+        text-align: center;
+        user-select: none;
+        cursor: pointer;
+        animation: 0.3s show both;
+        will-change: transform, opacity;
+        flex-basis: 0;
+        &.eat {
+          animation-delay: 0.1s;
+          flex-grow: 1;
+        }
+        &.sleep {
+          animation-delay: 0.15s;
+          flex-grow: 0.618;
+        }
+        &.pisspoop {
+          animation-delay: 0.2s;
+          flex-grow: 0.618;
+        }
+        &.statistics {
+          animation-delay: 0.25s;
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+  .footer {
+    font-size: 16px;
+  }
+  &.no-animation * {
+    animation: none !important;
+  }
+}
+
+@keyframes show {
+  from {
+    transform: translate3d(0, 20px, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,13 @@
+.text-editor {
+  width: 100%;
+  .text-input {
+    width: 100%;
+    min-width: 0px;
+
+    font-family: inherit;
+    height: 30px;
+    line-height: 30px;
+    text-align: right;
+    font-size: 22px;
+  }
+}

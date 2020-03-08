@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "baby_dev",
+      "script": "./server/server.js",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": "4001",
+        "DATA_DIR": "/var/lib/baby_dev/data",
+        "UPLOAD_DIR": "/var/lib/baby_dev/upload"
+      }
+    }
+  ]
+}

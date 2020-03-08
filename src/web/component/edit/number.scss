@@ -1,0 +1,32 @@
+.number-editor {
+  .number-display {
+    width: 60px;
+    min-width: 60px;
+    margin-bottom: 10px;
+  }
+  .number-input {
+    font-family: inherit;
+    height: 30px;
+    line-height: 30px;
+    width: 80px;
+    max-width: 80px;
+    min-width: 0;
+    text-align: right;
+    font-size: 22px;
+    // color: var(--color-strong);
+  }
+  .number-slider {
+    padding: 0;
+    width: 100%;
+    --wired-slider-knob-color: var(--color-strong, --color-theme);
+    --wired-slider-knob-zero-color: var(--color-strong, --color-theme);
+    --wired-slider-bar-color: #888;
+  }
+  .number-slider-labels {
+    font-size: 14px;
+    color: var(--color-strong, --color-theme);
+    color: #888;
+    margin-top: 20px;
+    margin-bottom: -10px;
+  }
+}

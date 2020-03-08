@@ -1,0 +1,95 @@
+@font-face {
+  font-family: 'Virgil';
+  src: url('../assets/fg_virgil-webfont.woff2') format('woff2'),
+    url('../assets/fg_virgil-webfont.woff') format('woff');
+}
+
+:root {
+  --font-family-title: Georgia;
+  --font-family-body: 'Virgil', 'STXingkai', 'KaiTi';
+  --font-family-sans: 'Trebuchet MS';
+  --color-theme: #8887e2;
+}
+
+html,
+body {
+  color: #333;
+  box-sizing: border-box;
+  font-size: 12px;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  font-family: var(--font-family-body);
+  font-size: 22px;
+  &.no-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: hidden;
+  }
+}
+
+// ::selection {
+//   background: black;
+//   color: white;
+// }
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:focus {
+  outline: none;
+}
+
+// button {
+//   appearance: none !important;
+//   border: none !important;
+//   background: none;
+//   color: inherit;
+//   display: inline-block;
+//   padding: 0;
+//   font: inherit;
+//   cursor: pointer;
+//   user-select: none;
+//   text-transform: none;
+// }
+
+// ::-webkit-scrollbar {
+//   width: 12px;
+//   &:hover {
+//     // width: 20px;
+//   }
+// }
+// /* addresses the empty space “below” the progress bar */
+// ::-webkit-scrollbar-track {
+//   background: transparent;
+//   &:hover {
+//     pointer-events: all;
+//     cursor: pointer;
+//     background: rgba(0, 0, 0, 0.1);
+//   }
+// }
+// /** the top-most layer of the the progress bar not covered by the draggable scrolling element (thumb) */
+// ::-webkit-scrollbar-track-piece {
+//   background: transparent;
+// }
+// /** the draggable scrolling handle.*/
+// ::-webkit-scrollbar-thumb {
+//   background: rgba(0, 0, 0, 0.3);
+// }
+// /** the bottom corner of the scrollbar, where both horizontal and vertical scrollbars meet. */
+// ::-webkit-scrollbar-corner {
+//   background: rgba(0, 0, 0, 0.1);
+//   border: none;
+// }
+// /** the draggable resizing handle that appears at the bottom corner of some elements. */
+// ::-webkit-resizer {
+//   background: none;
+// }

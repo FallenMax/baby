@@ -1,0 +1,21 @@
+.overview {
+  font-size: 12px;
+  &.size-compact {
+    .part + .part {
+      margin-left: 5px;
+    }
+  }
+  &.size-large {
+    width: 100%;
+    font-size: 14px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #333;
+    .part {
+      white-space: nowrap;
+    }
+    .part + .part {
+      margin-left: 15px;
+    }
+  }
+}
