@@ -7,6 +7,8 @@
     min-height: 50px;
     min-width: 70px;
     padding: 0 10px;
+    cursor: pointer;
+    user-select: none;
     &.is-selected {
       color: white;
     }

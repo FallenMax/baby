@@ -4,7 +4,13 @@
   background-image: url('../statistics/bg_linedpaper.png');
   background-repeat: repeat;
   min-height: 100vh;
-
+  .export-button {
+    cursor: pointer;
+    user-select: none;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
   .page-content {
     margin-left: auto;
     margin-right: auto;
@@ -47,9 +53,12 @@
   width: 100%;
   line-height: var(--paper-line-height);
   font-size: 14px;
-  // padding: 0 10px;
   font-family: 'Courier New', Courier, monospace;
+  cursor: pointer;
   font-weight: bold;
+  &:hover {
+    text-decoration: underline;
+  }
   .time {
     min-width: 40px;
     margin-right: 20px;

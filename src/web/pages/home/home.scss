@@ -2,6 +2,13 @@
   width: 100%;
   min-height: 100vh;
   background-image: url('../../assets/bg_colorful.png');
+  .user-name {
+    cursor: pointer;
+    user-select: none;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
   .page-content {
     margin-top: calc((100vh - 500px) / 2);
     margin-left: auto;
@@ -25,6 +32,21 @@
         animation: 0.3s show both;
         will-change: transform, opacity;
         flex-basis: 0;
+        position: relative;
+        &:hover,
+        &:focus {
+          &::after {
+            content: ' ';
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+          }
+        }
         &.eat {
           animation-delay: 0.1s;
           flex-grow: 1;
