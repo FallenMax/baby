@@ -36,6 +36,23 @@
       margin-bottom: 11px;
     }
   }
+  .statistics {
+    .chart-select {
+      font-size: 12px;
+      font-family: 'Courier New', Courier, monospace;
+      color: #333;
+      .chart-option {
+        margin-right: 10px;
+        cursor: pointer;
+        user-select: none;
+        line-height: 1.5;
+        &.is-selected {
+          font-weight: bold;
+          // text-decoration: underline;
+        }
+      }
+    }
+  }
 
   .record-day {
     line-height: var(--paper-line-height);

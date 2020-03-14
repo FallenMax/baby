@@ -1,6 +1,9 @@
-import { keepTruthy } from '../../common/util/array/filter'
+import { keepTruthy } from './array/filter'
 
 const pad = (num: number) => (num < 10 ? '0' + num : num)
+
+export const HOUR = 1000 * 60 * 60
+export const DAY = HOUR * 24
 
 export const getTimeString = (d: Date): string => {
   const hour = d.getHours()
@@ -19,15 +22,7 @@ export const getDateString = (d: Date, short = false) => {
     : [year, month, day].join('-')
 }
 
-export const parseTimeString = (str: string) => {
-  const [hour, minute] = str.split(':')
-  let date = new Date()
-  date.setHours(Number(hour))
-  date.setMinutes(Number(minute))
-  const now = new Date()
-  if (date.getTime() > now.getTime()) {
-    date = new Date(date.getTime() - 1000 * 60 * 60 * 24)
-  }
-
-  return date
+export const parseDateString = (str: string): Date => {
+  const [y, m, d] = str.split('-').map((val) => Number(val))
+  return new Date(y, m - 1, d, 0, 0, 0, 0)
 }

@@ -1,6 +1,7 @@
 import m from 'mithril'
 import { Records } from '../../../common/types'
 import { assertNever } from '../../../common/util/assert'
+import { HOUR } from '../../../common/util/time'
 import './overview.scss'
 
 type Overview = {
@@ -12,7 +13,7 @@ type Overview = {
   poopCount: number
 }
 
-const getOverview = (records: Records.Record[]): Overview => {
+export const getOverview = (records: Records.Record[]): Overview => {
   const now = new Date()
   const dayStart = new Date()
   dayStart.setHours(0)
@@ -89,11 +90,10 @@ const getOverview = (records: Records.Record[]): Overview => {
   }
 
   const hourSinceLastMeal = lastMeal
-    ? Math.floor(((now.getTime() - lastMeal!.getTime()) / (1000 * 3600)) * 10) /
-      10
+    ? Math.floor(((now.getTime() - lastMeal!.getTime()) / HOUR) * 10) / 10
     : undefined
 
-  const hourSlept = Math.floor((sleepDurationMs / (1000 * 3600)) * 10) / 10
+  const hourSlept = Math.floor((sleepDurationMs / HOUR) * 10) / 10
 
   const overview = {
     eatCount,

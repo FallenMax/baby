@@ -1,6 +1,6 @@
 import m from 'mithril'
 import { WiredSlider } from 'wired-elements'
-import { getDateString, getTimeString } from '../../util/time'
+import { getDateString, getTimeString } from '../../../common/util/time'
 import { use } from '../../util/use'
 import './time.scss'
 use(WiredSlider)

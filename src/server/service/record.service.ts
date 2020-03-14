@@ -61,7 +61,7 @@ const deleteRecordById = async (id: string): Promise<number> => {
   return 0
 }
 
-export const Recordservice = audit(
+export const recordService = audit(
   {
     createRecord,
     updateRecord,

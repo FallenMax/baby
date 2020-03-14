@@ -1,12 +1,19 @@
 import m from 'mithril'
 import { Records } from '../../../common/types'
 import { assertNever } from '../../../common/util/assert'
+import {
+  DAY,
+  getDateString,
+  getTimeString,
+  HOUR,
+  parseDateString,
+} from '../../../common/util/time'
 import { NavigationBar } from '../../component/navigation/navigation'
 import { Overview } from '../../component/overview/overview'
 import { recordService } from '../../service/record.service'
 import { downloadURI } from '../../util/download'
-import { getDateString, getTimeString } from '../../util/time'
 import { paths } from '../path'
+import { StatisticChart } from './charts'
 import './statistics.scss'
 
 const getDetailString = (rec: Records.Record): string => {
@@ -73,20 +80,63 @@ export const Record: m.FactoryComponent<RecordAttrs> = () => {
 }
 
 const groupByDay = (records: Records.Record[]) => {
-  const grouped: Record<string, Records.Record[]> = {}
+  const groups: Record<string, Records.Record[]> = {}
   records.forEach((record) => {
     const day = getDateString(record.time)
-    if (!grouped[day]) {
-      grouped[day] = []
+    if (!groups[day]) {
+      groups[day] = []
     }
-    grouped[day].push(record)
+    groups[day].push(record)
   })
-  return grouped
+  return groups
+}
+
+/** start with waking up in current day, end with waking up in next day */
+const groupBySleepCycle = (records: Records.Record[]) => {
+  const groups = groupByDay(
+    records.slice().sort((a, b) => a.time.getTime() - b.time.getTime()),
+  )
+
+  for (const day in groups) {
+    if (groups.hasOwnProperty(day)) {
+      const records = groups[day]
+      const isMorning = (d: Date) => {
+        return d.getTime() - parseDateString(day).getTime() < HOUR * 12
+      }
+      const morningSleepEventIndex = records.findIndex(
+        (r) => (r.type === 'wakeup' || r.type === 'sleep') && isMorning(r.time),
+      )
+      if (morningSleepEventIndex !== -1) {
+        const event = records[morningSleepEventIndex]
+        if (event.type === 'wakeup') {
+          // move these events to previous day
+          const prevDay = getDateString(new Date(event.time.getTime() - DAY))
+          if (!groups[prevDay]) {
+            groups[prevDay] = []
+          }
+          groups[prevDay].push(...records.slice(0, morningSleepEventIndex + 1))
+          groups[day] = records.slice(morningSleepEventIndex + 1)
+        }
+      }
+    }
+  }
+  return groups
+}
+
+const selectRecordsWithinRange = (
+  records: Records.Record[],
+  days: number,
+): Records.Record[] => {
+  const start = new Date(
+    parseDateString(getDateString(new Date())).getTime() - DAY * days,
+  ).getTime()
+  return records.filter((rec) => rec.time.getTime() >= start)
 }
 
 let scrollPosition = 0
 export type StatisticsPageAttrs = {}
 export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
+  let dateRange: 7 | 30 = 7
   const startEdit = (rec: Records.Record) => {
     const path = {
       eat: paths['/eat'],
@@ -141,13 +191,54 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
                     ),
                     m(Overview, { records, size: 'large' }),
                   ]),
+                  m('section.statistics', [
+                    m(
+                      'wired-link.section-title',
+                      {
+                        onclick(e) {
+                          e.preventDefault()
+                        },
+                      },
+                      'statistics',
+                    ),
+                    m('', [
+                      m('.chart-select.f-v-center', [
+                        m(
+                          '.chart-option',
+                          {
+                            class: dateRange === 7 ? 'is-selected' : '',
+                            onclick() {
+                              dateRange = 7
+                            },
+                          },
+                          '7-days',
+                        ),
+                        m(
+                          '.chart-option',
+                          {
+                            class: dateRange === 30 ? 'is-selected' : '',
+                            onclick() {
+                              dateRange = 30
+                            },
+                          },
+                          '30-days',
+                        ),
+                      ]),
+                      m(StatisticChart, {
+                        dateRange: dateRange,
+                        records: groupBySleepCycle(
+                          selectRecordsWithinRange(records, dateRange),
+                        ),
+                      }),
+                    ]),
+                  ]),
                   m('section.history', [
                     m(
                       'wired-link.section-title',
                       {
                         async onclick(e) {
                           e.preventDefault()
-                          await recordService.fetchRecords({force:true})
+                          await recordService.fetchRecords({ force: true })
                         },
                       },
                       'history',
