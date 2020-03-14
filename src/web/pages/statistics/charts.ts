@@ -41,54 +41,54 @@ export type StatisticChartAttrs = {
 }
 export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
   let ec: echarts.ECharts
-  let stale = true
   const redraw = ({ records, dateRange }: StatisticChartAttrs) => {
-    if (!stale) {
-      return
-    }
-    const data = Object.entries(records).map(([day, records]) => {
-      let eatCount = 0
-      let eatAmount = 0
-      let pissCount = 0
-      let poopCount = 0
-      let isSleeping = false
-      let sleepStart: undefined | Date = undefined
-      let sleepDurationMs = 0
-      records.forEach((rec) => {
-        switch (rec.type) {
-          case 'eat': {
-            eatCount++
-            switch (rec.food) {
-              case 'breast_milk':
-              case 'formula_milk':
-                eatAmount += Number(rec.amount || 0)
-                break
+    const data = Object.entries(records)
+      .map(([day, records]) => {
+        let eatCount = 0
+        let eatAmount = 0
+        let pissCount = 0
+        let poopCount = 0
+        let isSleeping = false
+        let sleepStart: undefined | Date = undefined
+        let sleepDurationMs = 0
+        records.forEach((rec) => {
+          switch (rec.type) {
+            case 'eat': {
+              eatCount++
+              switch (rec.food) {
+                case 'breast_milk':
+                case 'formula_milk':
+                  eatAmount += Number(rec.amount || 0)
+                  break
+              }
+              break
             }
-            break
+            case 'piss':
+              pissCount++
+              break
+            case 'poop':
+              poopCount++
+              break
+            case 'sleep':
+              isSleeping = true
+              sleepStart = rec.time
+              break
+            case 'wakeup':
+              isSleeping = false
+              if (sleepStart != null) {
+                // not first wakeup
+                sleepDurationMs += rec.time.getTime() - sleepStart.getTime()
+              }
+              break
           }
-          case 'piss':
-            pissCount++
-            break
-          case 'poop':
-            poopCount++
-            break
-          case 'sleep':
-            isSleeping = true
-            sleepStart = rec.time
-            break
-          case 'wakeup':
-            isSleeping = false
-            if (sleepStart != null) {
-              // not first wakeup
-              sleepDurationMs += rec.time.getTime() - sleepStart.getTime()
-            }
-            break
-        }
-      })
-      const hourSlept = Math.floor((sleepDurationMs / HOUR) * 10) / 10
+        })
+        const hourSlept = Math.floor((sleepDurationMs / HOUR) * 10) / 10
 
-      return { day, eatAmount, hourSlept }
-    })
+        return { day, eatAmount, hourSlept }
+      })
+      .filter(({ day, eatAmount, hourSlept }) => {
+        return eatAmount || hourSlept
+      })
     const eatData = data.map(({ day, eatAmount }) => [day, eatAmount])
     const sleepData = data.map(({ day, hourSlept }) => [day, hourSlept])
 
@@ -106,9 +106,6 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           type: 'time',
           min: dayStart,
           max: today,
-          // axisLine: {
-          //   show: false,
-          // },
           axisTick: {
             show: false,
           },
@@ -232,11 +229,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
         },
       ],
     }
-    console.log('options ', options)
-
     ec.setOption(options)
-
-    stale = false
   }
   return {
     oncreate(vnode) {
@@ -246,9 +239,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
       redraw(vnode.attrs)
     },
     onbeforeupdate(vnode, old) {
-      stale = true
       redraw(vnode.attrs)
-      // console.log('vnode, old ', vnode, old)
       return false
     },
     view({ attrs }) {

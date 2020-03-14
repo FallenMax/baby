@@ -11,7 +11,6 @@ import { error } from './middleware/error.middleware'
 import { routes } from './router'
 import { fileService } from './service/file.service'
 import { sessionService } from './service/session.service'
-import { fillMockData } from './test/mock'
 import { isDev, isTesting } from './utils/env'
 
 let server: http.Server | undefined
@@ -93,12 +92,5 @@ export const quit = () => {
 }
 
 if (!isTesting) {
-  ;(async () => {
-    try {
-      await fillMockData()
-      await start()
-    } catch (error) {
-      panic(error)
-    }
-  })()
+  start().catch(panic)
 }
