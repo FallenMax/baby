@@ -1,4 +1,0 @@
-- introduction
-  - picking up old memories
-  - everything in one place
-  - your data is yours

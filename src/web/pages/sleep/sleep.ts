@@ -25,11 +25,24 @@ const round = (date: Date, precisionMin = 5) => {
   return next
 }
 
+const isSleeping = (): boolean | undefined => {
+  const { recordsFetched, records } = recordService
+  if (!recordsFetched) {
+    return undefined
+  }
+  const latest = records.find((r) => r.type === 'sleep' || r.type === 'wakeup')
+  if (!latest) {
+    return undefined
+  }
+  return latest.type === 'sleep'
+}
+
 export type SleepPageAttrs = {}
 export const SleepPage: m.FactoryComponent<SleepPageAttrs> = () => {
   let action: 'create' | 'update'
   let guid: string | undefined
   let record: Records.Sleep | undefined
+
   return {
     async oncreate(vnode) {
       window.scrollTo(0, 0)
@@ -41,7 +54,7 @@ export const SleepPage: m.FactoryComponent<SleepPageAttrs> = () => {
         action = 'create'
         record = {
           time: round(new Date()),
-          type: 'sleep',
+          type: isSleeping() ? 'wakeup' : 'sleep',
         }
       }
       m.redraw()
