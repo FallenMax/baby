@@ -125,7 +125,7 @@ export const HomePage: m.FactoryComponent<HomePageAttrs> = () => {
                   e.redraw = false
                   await userService.logout()
                   m.route.set(paths['/'], null, { replace: true })
-                  m.redraw()
+                  location.reload()
                 },
               },
               'logout',
