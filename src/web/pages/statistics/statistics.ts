@@ -12,9 +12,13 @@ import { NavigationBar } from '../../component/navigation/navigation'
 import { Overview } from '../../component/overview/overview'
 import { recordService } from '../../service/record.service'
 import { downloadURI } from '../../util/download'
+import { lazy } from '../../util/lazy'
 import { paths } from '../path'
-import { StatisticChart } from './charts'
 import './statistics.scss'
+
+const StatisticChart = lazy(() =>
+  import('./charts').then((m) => m.StatisticChart),
+)
 
 const getDetailString = (rec: Records.Record): string => {
   switch (rec.type) {

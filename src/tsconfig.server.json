@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "module": "commonjs",
     "outDir": "../" /* Redirect output structure to the directory. */,
     "sourceMap": false
   },
