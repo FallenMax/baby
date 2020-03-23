@@ -82,15 +82,15 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
               break
           }
         })
-        const hourSlept = Math.floor((sleepDurationMs / HOUR) * 10) / 10
+        const minuteSlept = Math.floor((sleepDurationMs / HOUR) * 10) / 10
 
-        return { day, eatAmount, hourSlept }
+        return { day, eatAmount, minuteSlept }
       })
-      .filter(({ day, eatAmount, hourSlept }) => {
-        return eatAmount || hourSlept
+      .filter(({ day, eatAmount, minuteSlept }) => {
+        return eatAmount || minuteSlept
       })
     const eatData = data.map(({ day, eatAmount }) => [day, eatAmount])
-    const sleepData = data.map(({ day, hourSlept }) => [day, hourSlept])
+    const sleepData = data.map(({ day, minuteSlept }) => [day, minuteSlept])
 
     const today = getDateString(new Date())
     const dayStart = getDateString(

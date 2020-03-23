@@ -1,14 +1,14 @@
 import m from 'mithril'
 import { Records } from '../../../common/types'
 import { assertNever } from '../../../common/util/assert'
-import { HOUR } from '../../../common/util/time'
+import { MINUTE, prettyTime } from '../../../common/util/time'
 import './overview.scss'
 
 type Overview = {
   eatCount: number
   eatAmount: number
-  hourSinceLastMeal: number | undefined
-  hourSlept: number
+  minuteSinceLastMeal: number | undefined
+  minuteSlept: number
   pissCount: number
   poopCount: number
 }
@@ -89,17 +89,17 @@ export const getOverview = (records: Records.Record[]): Overview => {
     sleepDurationMs += now.getTime() - sleepStart!.getTime()
   }
 
-  const hourSinceLastMeal = lastMeal
-    ? Math.floor(((now.getTime() - lastMeal!.getTime()) / HOUR) * 10) / 10
+  const minuteSinceLastMeal = lastMeal
+    ? Math.floor((now.getTime() - lastMeal!.getTime()) / MINUTE)
     : undefined
 
-  const hourSlept = Math.floor((sleepDurationMs / HOUR) * 10) / 10
+  const minuteSlept = Math.floor(sleepDurationMs / MINUTE)
 
   const overview = {
     eatCount,
     eatAmount,
-    hourSinceLastMeal,
-    hourSlept,
+    minuteSinceLastMeal,
+    minuteSlept,
     pissCount,
     poopCount,
   }
@@ -116,25 +116,25 @@ export const Overview: m.FactoryComponent<OverviewAttrs> = () => {
       const {
         eatCount,
         eatAmount,
-        hourSinceLastMeal,
-        hourSlept,
+        minuteSinceLastMeal,
+        minuteSlept,
         pissCount,
         poopCount,
       } = getOverview(records)
 
       const gap = size === 'compact' ? '' : ''
 
-      const eat = `🍼${gap}${eatCount}/${eatAmount}ml/${
-        typeof hourSinceLastMeal === 'number' ? hourSinceLastMeal + 'h' : '-'
-      }`
-      const sleep = `🛏️${gap}${hourSlept}h`
+      const eat = `🍼${gap}${eatCount}/${eatAmount}ml/${prettyTime(
+        minuteSinceLastMeal,
+      )}`
+      const sleep = `🛏️${gap}${prettyTime(minuteSlept)}`
       const piss = `💦${gap}${pissCount}`
       const poop = `💩${gap}${poopCount}`
 
       return m(
         '.overview.f-v-center',
         { class: `size-${size}` },
-        [eat, sleep, piss, poop].map((str) => m('.part', str)),
+        [eat, sleep, piss, poop].map((item) => m('.part', item)),
       )
     },
   }
