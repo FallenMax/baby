@@ -1,5 +1,8 @@
 .form-footer-placeholder {
   height: 100px;
+  @media screen and (min-width: 450px) {
+    height: 0;
+  }
 }
 .form-footer {
   position: fixed;
@@ -7,6 +10,15 @@
   left: 0;
   right: 0;
   padding: 10px;
+  @media screen and (min-width: 450px) {
+    position: relative;
+    margin-top: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    justify-content: start;
+    flex-direction: row-reverse;
+  }
 
   margin-left: auto;
   margin-right: auto;
@@ -30,6 +42,11 @@
     color: white;
     text-transform: uppercase;
     position: relative;
+
+    @media screen and (min-width: 450px) {
+      width: 120px;
+    }
+
     &:hover,
     &:focus {
       &::after {
@@ -50,6 +67,11 @@
     background: white;
     margin-top: 5px;
     animation: 0.2s slideup both 0.3s;
+    @media screen and (min-width: 450px) {
+      margin-top: 0;
+      margin-right: 10px;
+      animation: none;
+    }
   }
 }
 
