@@ -11,7 +11,8 @@ import { recordService } from '../../service/record.service'
 import { colors } from '../../style/color'
 import { use } from '../../util/use'
 import { FormFooter, RecordSubmit } from '../form/form_footer'
-import './eat.scss'
+import { paths } from '../path'
+import './custom.scss'
 use(WiredCard)
 use(WiredDivider)
 use(WiredLink)
@@ -26,38 +27,39 @@ const round = (date: Date, precisionMin = 5) => {
   return next
 }
 
-export type EatPageAttrs = {}
-export const EatPage: m.FactoryComponent<EatPageAttrs> = () => {
+export type CustomPageAttrs = {}
+export const CustomPage: m.FactoryComponent<CustomPageAttrs> = () => {
   let action: 'create' | 'update'
   let guid: string | undefined
-  let record: Records.Eat | undefined
+  let record: Records.Custom | undefined
 
   return {
     async oncreate(vnode) {
       window.scrollTo(0, 0)
       guid = m.route.param('guid')
+      await recordService.fetchCustomTypes()
       if (guid) {
         action = 'update'
-        record = (await recordService.fetchSingleRecord(guid)) as Records.Eat
+        record = (await recordService.fetchSingleRecord(guid)) as Records.Custom
       } else {
         action = 'create'
         record = {
           time: round(new Date()),
-          type: 'eat',
-          food: 'breast_milk',
-          amount: 100,
+          type: 'custom',
+          subtype: recordService.customTypes[0]?.id,
+          amount: 0,
         }
       }
       m.redraw()
     },
     view() {
-      return m('#eat', [
+      return m('#custom', [
         m(NavigationBar, {
-          center: m('.title.f-center', 'eat'),
+          center: m('.title.f-center', 'custom event'),
         }),
         record &&
           m(
-            'form.eat-form',
+            'form.custom-form',
             {
               onsubmit(e) {
                 e.stopPropagation()
@@ -77,49 +79,52 @@ export const EatPage: m.FactoryComponent<EatPageAttrs> = () => {
               m('wired-divider.divider'),
 
               m(RecordField, { label: 'what' }, [
-                m(OptionEditor, {
-                  themeColor: colors.eat,
-                  selected: record.food,
-                  options: [
-                    { key: 'breast_milk', text: 'Breast Milk' },
-                    { key: 'formula_milk', text: 'Formula Milk' },
-                    { key: 'baby_food', text: 'Baby Food' },
-                  ],
-                  onChange(key) {
-                    if (!record) {
-                      return
-                    }
-                    record.food = key as Records.Food
-                    if (Records.foodHasAmount(record.food)) {
-                      if (record.amount == null) {
-                        record.amount = recordService.getDefaultAmount()
-                      }
-                    } else {
-                      record.amount = undefined
-                    }
-                  },
-                }),
-              ]),
-
-              Records.foodHasAmount(record.food) && [
-                m('wired-divider.divider'),
-
-                m(RecordField, { label: 'how much' }, [
-                  m(NumberEditor, {
-                    number: record.amount ?? recordService.getDefaultAmount(),
-                    max: 240,
-                    step: 10,
-                    unit: 'ml',
-                    onChange(val) {
+                m('.manage-types.f-col.f-c-end', [
+                  m(
+                    'a.manage-type-link',
+                    {
+                      async onclick(e) {
+                        e.preventDefault()
+                        e.redraw = false
+                        m.route.set(paths['/custom_manage'])
+                      },
+                    },
+                    recordService.customTypesFetched &&
+                      recordService.customTypes.length === 0
+                      ? 'add >'
+                      : 'edit >',
+                  ),
+                  m(OptionEditor, {
+                    themeColor: colors.custom,
+                    selected: record.subtype,
+                    options: recordService.customTypes.map((type) => {
+                      return { key: type.id, text: type.name }
+                    }),
+                    onChange(key) {
                       if (!record) {
                         return
                       }
-                      record.amount = val
+                      record.subtype = key
                     },
                   }),
                 ]),
-              ],
+              ]),
 
+              m('wired-divider.divider'),
+
+              m(RecordField, { label: 'how much' }, [
+                m(NumberEditor, {
+                  number: record.amount ?? recordService.getDefaultAmount(),
+                  unit: '',
+                  onChange(val) {
+                    if (!record) {
+                      return
+                    }
+                    record.amount = val
+                  },
+                }),
+              ]),
+              ,
               m('wired-divider.divider'),
 
               m(RecordField, { label: 'note' }, [

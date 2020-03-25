@@ -16,7 +16,7 @@ export const round = (number: number, step: number) => {
 export type NumberEditorAttrs = {
   number: number
   min?: number
-  max: number
+  max?: number
   step?: number
   unit: string
   onChange(number: number): void
@@ -38,25 +38,27 @@ export const NumberEditor: m.FactoryComponent<NumberEditorAttrs> = () => {
             type: 'number',
             value: number,
             onchange(e) {
-              onChange(e.target.value)
+              onChange(Number(e.target.value) || 0)
             },
           }),
           unit,
         ),
-        m('.number-slider-labels.f-v-center', [
-          m('.slider-min', getNumberString(min, unit)),
-          m('.f-1'),
-          m('.slider-max', getNumberString(max, unit)),
-        ]),
-        m('wired-slider.number-slider', {
-          min: 0,
-          max: max,
-          step: step,
-          value: number,
-          onchange(e) {
-            onChange(round(e.target.value, step))
-          },
-        }),
+        max &&
+          m('.number-slider-labels.f-v-center', [
+            m('.slider-min', getNumberString(min, unit)),
+            m('.f-1'),
+            m('.slider-max', getNumberString(max, unit)),
+          ]),
+        max &&
+          m('wired-slider.number-slider', {
+            min: 0,
+            max: max,
+            step: step,
+            value: number,
+            onchange(e) {
+              onChange(round(e.target.value, step))
+            },
+          }),
       ])
     },
   }

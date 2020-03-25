@@ -29,7 +29,7 @@ export const parseDateString = (str: string): Date => {
 }
 
 export const prettyTime = (minute: number | undefined) => {
-  if (minute == null) return '-'
+  if (!minute) return '-'
   const hour = Math.floor(minute / 60)
   const restMin = Math.floor(minute % 60)
   return keepTruthy([hour && `${hour}h`, `${restMin}m`]).join('')

@@ -27,12 +27,19 @@ export namespace Records {
     time: Date
     note?: string
   }
+  export type Custom = {
+    type: 'custom'
+    subtype: string
+    time: Date
+    amount?: number
+    note?: string
+  }
   export type PissPoop = {
     type: 'piss' | 'poop'
     time: Date
     note?: string
   }
-  export type RecordDraft = Eat | Sleep | PissPoop
+  export type RecordDraft = Eat | Sleep | PissPoop | Custom
 
   export type Record = RecordDraft & {
     id: string
@@ -46,6 +53,16 @@ export namespace Records {
   }
   export const foodHasAmount = (food: Food) => {
     return food === 'breast_milk' || food === 'formula_milk'
+  }
+
+  export type CustomTypeDraft = {
+    emoji?: string
+    color?: string
+    name: string
+  }
+  export type CustomType = CustomTypeDraft & {
+    id: string
+    userId: string
   }
 }
 
@@ -109,6 +126,13 @@ export type ApiSync = {
     createRecord(record: Records.RecordDraft): Records.Record
     updateRecord(record: Records.RecordDraft & { id: string }): Records.Record
     deleteRecord(params: { id: string }): number
+
+    getMyCustomTypes(params: {}): Records.CustomType[]
+    createCustomType(type: Records.CustomTypeDraft): Records.CustomType
+    updateCustomType(
+      type: Records.CustomTypeDraft & { id: string },
+    ): Records.CustomType
+    deleteCustomType(params: { id: string }): number
   }
 }
 

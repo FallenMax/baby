@@ -13,6 +13,9 @@
     overflow: visible;
     white-space: nowrap;
   }
+  .field-content {
+    overflow: hidden;
+  }
   &.layout-column {
     .field-label {
       margin-bottom: 20px;

@@ -5,6 +5,8 @@ import { userService } from '../service/user.service'
 import { ApiWithContext } from '../types/api'
 
 export const recordController: ApiWithContext['record'] = {
+  //-------------- record --------------
+
   async createRecord(draft, ctx) {
     const user = await userService.getUserOrThrow(ctx)
     if (!recordService.isContentValid(draft)) {
@@ -51,5 +53,46 @@ export const recordController: ApiWithContext['record'] = {
       throw new UserError(ErrorCode.DELETE_ITEM_NOT_FOUND)
     }
     return await recordService.deleteRecordById(id)
+  },
+
+  //-------------- custom type --------------
+
+  async createCustomType(draft, ctx) {
+    const user = await userService.getUserOrThrow(ctx)
+    const record = await recordService.createCustomType(draft, user)
+    return record
+  },
+
+  async getMyCustomTypes(_, ctx) {
+    const user = await userService.getUserOrThrow(ctx)
+    const Records = await recordService.getCustomTypes({ userId: user.id })
+    return Records
+  },
+
+  async updateCustomType(update, ctx) {
+    const user = await userService.getUserOrThrow(ctx)
+    const [existed] = await recordService.getCustomTypes({
+      userId: user.id,
+      id: update.id,
+    })
+    if (!existed) {
+      throw new UserError(ErrorCode.UPDATE_ITEM_NOT_FOUND)
+    }
+    if (!recordService.isContentValid(update)) {
+      throw new UserError(ErrorCode.ITEM_INVALID)
+    }
+    return await recordService.updateCustomType(update)
+  },
+
+  async deleteCustomType({ id }, ctx) {
+    const user = await userService.getUserOrThrow(ctx)
+    const [existed] = await recordService.getCustomTypes({
+      userId: user.id,
+      id: id,
+    })
+    if (!existed) {
+      throw new UserError(ErrorCode.DELETE_ITEM_NOT_FOUND)
+    }
+    return await recordService.deleteCustomTypeById(id)
   },
 }

@@ -3,5 +3,6 @@ export const colors = {
   eat: '#82c91e',
   sleep: '#7950f2',
   pisspoop: '#fd7e14',
+  custom: '#fab005',
   statistics: '#228be6',
 }

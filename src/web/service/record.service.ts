@@ -1,17 +1,45 @@
 import m from 'mithril'
 import { Records } from '../../common/types'
+import { assertNever } from '../../common/util/assert'
 import { api } from '../api'
 
 type Record = Records.Record
-type Draft = Records.RecordDraft
+type RecordDraft = Records.RecordDraft
+type CustomType = Records.CustomType
+type CustomTypeDraft = Records.CustomTypeDraft
 
 export const recordService = {
+  //-------------- Records --------------
+
+  records: [] as Record[],
   recordsFetched: false,
   getDefaultAmount() {
     return 100
   },
-  records: [] as Record[],
-  async createRecord(record: Draft) {
+  getRecordName(record: Record) {
+    switch (record.type) {
+      case 'eat':
+      case 'piss':
+      case 'poop':
+      case 'sleep':
+        return record.type
+      case 'wakeup':
+        return 'wakeup'
+      case 'custom': {
+        const type = recordService.customTypes.find(
+          (t) => t.id === record.subtype,
+        )
+        if (type) {
+          return type.name
+        } else {
+          return '...'
+        }
+      }
+      default:
+        return assertNever(record)
+    }
+  },
+  async createRecord(record: RecordDraft) {
     await api.record.createRecord(record)
     this.fetchRecords({ force: true }).catch((e) => console.error(e))
     m.redraw()
@@ -24,6 +52,9 @@ export const recordService = {
     this.records = (await api.record.getMyRecords({}))
       .map((r) => {
         r.time = new Date(r.time)
+        if ('amount' in r) {
+          r.amount = Number(r.amount)
+        }
         return r
       })
       .sort((a, b) => b.time.getTime() - a.time.getTime())
@@ -34,10 +65,13 @@ export const recordService = {
     const record = await api.record.getMyRecordById({ id })
     if (record) {
       record.time = new Date(record.time)
+      if ('amount' in record) {
+        record.amount = Number(record.amount)
+      }
     }
     return record
   },
-  async updateRecord(record: Draft & { id: string }) {
+  async updateRecord(record: RecordDraft & { id: string }) {
     await api.record.updateRecord(record)
     this.fetchRecords({ force: true }).catch((e) => console.error(e))
     m.redraw()
@@ -62,6 +96,53 @@ export const recordService = {
       }),
     )
     return csv
+  },
+
+  //-------------- Custom Events --------------
+
+  customTypes: [] as CustomType[],
+  customTypesFetched: false,
+  defaultTypeColor: '#000000',
+  defaultTypeIcon: '❤️',
+  getCustomIcon(subtype: string) {
+    const type = recordService.customTypes.find((t) => t.id === subtype)
+    if (type) {
+      return type.emoji || recordService.defaultTypeIcon
+    } else {
+      return recordService.defaultTypeIcon
+    }
+  },
+  getCustomColor(subtype: string) {
+    const type = recordService.customTypes.find((t) => t.id === subtype)
+    if (type) {
+      return type.color || recordService.defaultTypeColor
+    } else {
+      return recordService.defaultTypeColor
+    }
+  },
+  async createCustomType(type: CustomTypeDraft) {
+    await api.record.createCustomType(type)
+    this.fetchCustomTypes({ force: true }).catch((e) => console.error(e))
+    m.redraw()
+  },
+  async fetchCustomTypes(options?: { force?: boolean }) {
+    const { force = false } = options || {}
+    if (this.customTypesFetched && !force) {
+      return
+    }
+    this.customTypes = await api.record.getMyCustomTypes({})
+    this.customTypesFetched = true
+    m.redraw()
+  },
+  async updateCustomType(type: CustomTypeDraft & { id: string }) {
+    await api.record.updateCustomType(type)
+    this.fetchCustomTypes({ force: true }).catch((e) => console.error(e))
+    m.redraw()
+  },
+  async deleteCustomType(id: string) {
+    await api.record.deleteCustomType({ id })
+    this.fetchCustomTypes({ force: true }).catch((e) => console.error(e))
+    m.redraw()
   },
 }
 

@@ -11,7 +11,7 @@ type Nullable<T> = {
 }
 
 export type FindOption<T> = {
-  sort?: { [K in keyof T]?: -1 | 1 }
+  sort?: { [K in keyof T | 'createdAt' | 'updatedAt']?: -1 | 1 }
   limit?: number
   skip?: number
 }
@@ -97,7 +97,6 @@ export function createDatabase<T extends { id: string }>(
     setIndex(field) {
       db.ensureIndex({
         fieldName: field as string,
-        // unique: true,
       })
     },
     destroy: () => {
@@ -105,5 +104,4 @@ export function createDatabase<T extends { id: string }>(
     },
   }
   return database
-  // return logObject(database, 'db')
 }

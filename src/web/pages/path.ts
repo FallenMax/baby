@@ -10,6 +10,9 @@ export const paths = {
   '/sleep/:guid': '/sleep/:guid',
   '/pisspoop': '/pisspoop',
   '/pisspoop/:guid': '/pisspoop/:guid',
+  '/custom': '/custom',
+  '/custom_manage': '/custom_manage',
+  '/custom/:guid': '/custom/:guid',
   '/statistics': '/statistics',
 }
 

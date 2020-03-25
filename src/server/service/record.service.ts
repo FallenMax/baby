@@ -4,9 +4,17 @@ import { createDatabase, FindOption } from '../lib/database'
 import { audit } from './audit.service'
 
 type Record = Records.Record
+type CustomType = Records.CustomType
 
 const RecordDb = createDatabase<Record>('record')
 RecordDb.setIndex('id')
+RecordDb.setIndex('babyId')
+
+const CustomTypeDb = createDatabase<CustomType>('custom_type')
+CustomTypeDb.setIndex('id')
+CustomTypeDb.setIndex('userId')
+
+//-------------- Records --------------
 
 const createRecord = async (
   draft: Records.RecordDraft,
@@ -61,6 +69,55 @@ const deleteRecordById = async (id: string): Promise<number> => {
   return 0
 }
 
+//--------------  Custom --------------
+
+const createCustomType = async (
+  custom: Records.CustomTypeDraft,
+  user: User,
+): Promise<CustomType> => {
+  if (!user || !custom.name) {
+    throw new Error('Invalid custom type')
+  }
+  const type: CustomType = {
+    ...custom,
+    userId: user.id,
+    id: generateUuid(),
+  }
+  await CustomTypeDb.add(type)
+  return type
+}
+
+const getCustomTypes = async (
+  query: Partial<CustomType>,
+  option: FindOption<CustomType> = {
+    sort: {
+      createdAt: 1,
+    },
+  },
+): Promise<CustomType[]> => {
+  return await CustomTypeDb.find(query, option)
+}
+
+const updateCustomType = async (
+  type: Partial<CustomType> & { id: string },
+): Promise<CustomType> => {
+  const { id } = type
+  if (!id) {
+    throw new Error('requires `id` in custom type')
+  }
+  await CustomTypeDb.update({ id }, { ...type })
+  const re = await CustomTypeDb.findOne({ id })
+  return re!
+}
+
+const deleteCustomTypeById = async (id: string): Promise<number> => {
+  if (await CustomTypeDb.findOne({ id })) {
+    await CustomTypeDb.remove({ id })
+    return 1
+  }
+  return 0
+}
+
 export const recordService = audit(
   {
     createRecord,
@@ -69,9 +126,10 @@ export const recordService = audit(
     getRecords,
     deleteRecordById,
     isContentValid: Records.isValid,
+    createCustomType,
+    updateCustomType,
+    getCustomTypes,
+    deleteCustomTypeById,
   },
   'record',
-  {
-    exclude: ['getRecordById', 'getRecords', 'isContentValid'],
-  },
 )

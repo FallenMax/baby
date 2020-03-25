@@ -9,7 +9,7 @@ import { RecordField } from '../../component/record_field/record_field'
 import { recordService } from '../../service/record.service'
 import { colors } from '../../style/color'
 import { use } from '../../util/use'
-import { FormFooter } from '../form/form_footer'
+import { FormFooter, RecordSubmit } from '../form/form_footer'
 import './sleep.scss'
 use(WiredCard)
 use(WiredDivider)
@@ -112,19 +112,21 @@ export const SleepPage: m.FactoryComponent<SleepPageAttrs> = () => {
 
               action &&
                 record &&
-                m(
-                  FormFooter,
-                  action === 'create'
-                    ? {
-                        type: action,
-                        record,
-                      }
-                    : {
-                        type: action,
-                        record,
-                        guid: guid!,
-                      },
-                ),
+                m(FormFooter, [
+                  m(
+                    RecordSubmit,
+                    action === 'create'
+                      ? {
+                          type: action,
+                          record,
+                        }
+                      : {
+                          type: action,
+                          record,
+                          guid: guid!,
+                        },
+                  ),
+                ]),
             ],
           ),
       ])

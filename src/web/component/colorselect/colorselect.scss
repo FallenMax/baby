@@ -1,0 +1,63 @@
+.color-select {
+  .color-modal {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+
+    // width: 200px;
+    // height: 200px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background: #fff;
+    padding: 20px 10px 10px 20px;
+    color: #999;
+
+    .color-option {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      max-width: 40px;
+      min-height: 40px;
+      max-height: 40px;
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      color: #fff;
+      animation: 0.3s fadein both;
+    }
+
+    .color-row {
+      @for $i from 0 through 3 {
+        &:nth-child(#{$i + 1}) {
+          .color-option {
+            @for $j from 0 through 3 {
+              &:nth-child(#{$j + 1}) {
+                animation-delay: #{$i * 0.03 + $j * 0.03}s;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .color-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    transform: translate3d(0, 20px, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}

@@ -7,6 +7,8 @@
 })()
 
 import m from 'mithril'
+import { CustomPage } from './pages/custom/custom'
+import { CustomManagePage } from './pages/custom_manage/custom_manage'
 import { EatPage } from './pages/eat/eat'
 import { HomePage } from './pages/home/home'
 import { LandingPage } from './pages/landing/landing'
@@ -90,6 +92,15 @@ const start = async () => {
     },
     [paths['/pisspoop/:guid']]: {
       onmatch: () => requireLogin(PissPoopPage),
+    },
+    [paths['/custom']]: {
+      onmatch: () => requireLogin(CustomPage),
+    },
+    [paths['/custom/:guid']]: {
+      onmatch: () => requireLogin(CustomPage),
+    },
+    [paths['/custom_manage']]: {
+      onmatch: () => requireLogin(CustomManagePage),
     },
     [paths['/statistics']]: {
       onmatch: () => requireLogin(StatisticsPage),

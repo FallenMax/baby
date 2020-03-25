@@ -2,6 +2,7 @@ import m from 'mithril'
 import { Records } from '../../../common/types'
 import { assertNever } from '../../../common/util/assert'
 import { MINUTE, prettyTime } from '../../../common/util/time'
+import { recordService } from '../../service/record.service'
 import './overview.scss'
 
 type Overview = {
@@ -11,6 +12,9 @@ type Overview = {
   minuteSlept: number
   pissCount: number
   poopCount: number
+  customActivities: {
+    [K: string]: { count: number; amount: number; last: Date | undefined }
+  }
 }
 
 export const getOverview = (records: Records.Record[]): Overview => {
@@ -29,6 +33,7 @@ export const getOverview = (records: Records.Record[]): Overview => {
   let pissCount = 0
   let poopCount = 0
   let lastMeal: undefined | Date = undefined
+  let customActivities: Overview['customActivities'] = {}
 
   const recordsToday = records
     .filter((rec) => {
@@ -79,6 +84,20 @@ export const getOverview = (records: Records.Record[]): Overview => {
         }
         break
 
+      case 'custom': {
+        if (!customActivities[rec.subtype]) {
+          customActivities[rec.subtype] = {
+            last: undefined,
+            amount: 0,
+            count: 0,
+          }
+        }
+        customActivities[rec.subtype].last = rec.time
+        customActivities[rec.subtype].count += 1
+        customActivities[rec.subtype].amount += rec.amount || 0
+        break
+      }
+
       default:
         assertNever(rec)
         break
@@ -102,6 +121,7 @@ export const getOverview = (records: Records.Record[]): Overview => {
     minuteSlept,
     pissCount,
     poopCount,
+    customActivities,
   }
   return overview
 }
@@ -120,21 +140,36 @@ export const Overview: m.FactoryComponent<OverviewAttrs> = () => {
         minuteSlept,
         pissCount,
         poopCount,
+        customActivities,
       } = getOverview(records)
 
       const gap = size === 'compact' ? '' : ''
 
-      const eat = `🍼${gap}${eatCount}/${eatAmount}ml/${prettyTime(
-        minuteSinceLastMeal,
-      )}`
+      const eat = `🍼${gap}${eatCount || '-'}/${
+        eatAmount ? eatAmount + 'ml' : '-'
+      }/${prettyTime(minuteSinceLastMeal)}`
       const sleep = `🛏️${gap}${prettyTime(minuteSlept)}`
-      const piss = `💦${gap}${pissCount}`
-      const poop = `💩${gap}${poopCount}`
+      const piss = `💦${gap}${pissCount || '-'}`
+      const poop = `💩${gap}${poopCount || '-'}`
+      const now = new Date()
+      const customs =
+        size === 'compact'
+          ? []
+          : Object.entries(customActivities).map(
+              ([subtype, { count, amount, last }]) => {
+                const icon = recordService.getCustomIcon(subtype)
+                return `${icon}${gap}${count}/${amount || '-'}/${prettyTime(
+                  last && Math.floor((now.getTime() - last.getTime()) / MINUTE),
+                )}`
+              },
+            )
 
       return m(
-        '.overview.f-v-center',
+        '.overview',
         { class: `size-${size}` },
-        [eat, sleep, piss, poop].map((item) => m('.part', item)),
+        [eat, sleep, piss, poop, ...customs].map((item) =>
+          m('span.part', item),
+        ),
       )
     },
   }

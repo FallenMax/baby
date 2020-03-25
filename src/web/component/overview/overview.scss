@@ -2,9 +2,10 @@
   font-size: 12px;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
+  line-height: 1.5;
   &.size-compact {
-    .part + .part {
-      margin-left: 10px;
+    .part {
+      margin-right: 10px;
     }
   }
   &.size-large {
@@ -13,9 +14,7 @@
     color: #333;
     .part {
       white-space: nowrap;
-    }
-    .part + .part {
-      margin-left: 15px;
+      margin-right: 15px;
     }
   }
 }

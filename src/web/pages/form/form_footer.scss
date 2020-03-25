@@ -13,11 +13,6 @@
   @media screen and (min-width: 450px) {
     position: relative;
     margin-top: 80px;
-    display: flex;
-    align-items: center;
-    padding: 0;
-    justify-content: start;
-    flex-direction: row-reverse;
   }
 
   margin-left: auto;
@@ -28,7 +23,16 @@
   background: white;
   cursor: pointer;
   user-select: none;
+}
 
+.record-submit-footer {
+  @media screen and (min-width: 450px) {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    justify-content: start;
+    flex-direction: row-reverse;
+  }
   .create-button,
   .update-button,
   .delete-button {

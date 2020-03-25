@@ -41,6 +41,14 @@ const getDetailString = (rec: Records.Record): string => {
     case 'wakeup':
       return ''
 
+    case 'custom': {
+      if (rec.amount) {
+        return `(${rec.amount})`
+      } else {
+        return ''
+      }
+    }
+
     default:
       return assertNever(rec)
   }
@@ -57,6 +65,13 @@ export const Record: m.FactoryComponent<RecordAttrs> = () => {
         '.record-item.f-v-center',
         {
           class: record.type,
+
+          style:
+            record.type === 'custom'
+              ? {
+                  color: recordService.getCustomColor(record.subtype),
+                }
+              : {},
           onclick() {
             onClick(record)
           },
@@ -64,16 +79,7 @@ export const Record: m.FactoryComponent<RecordAttrs> = () => {
         m('.record-item-content.f-row', [
           m('.time.f-v-center', getTimeString(record.time)),
           m('.record-content.f-1', [
-            m(
-              'span.type',
-              {
-                eat: 'eat',
-                sleep: 'sleep',
-                wakeup: 'wake up',
-                piss: 'piss',
-                poop: 'poop',
-              }[record.type],
-            ),
+            m('span.type', recordService.getRecordName(record)),
             m('span.detail', getDetailString(record)),
             record.note && m('span.note', `${record.note}`),
           ]),
@@ -148,6 +154,7 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
       wakeup: paths['/sleep'],
       piss: paths['/pisspoop'],
       poop: paths['/pisspoop'],
+      custom: paths['/custom'],
     }[rec.type]
 
     m.route.set(path + '/' + rec.id)
@@ -163,7 +170,10 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
   }
   return {
     async oninit() {
-      await recordService.fetchRecords()
+      await Promise.all([
+        recordService.fetchRecords(),
+        recordService.fetchCustomTypes(),
+      ])
       window.scrollTo(0, scrollPosition)
     },
     onbeforeremove() {

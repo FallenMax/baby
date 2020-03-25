@@ -3,16 +3,8 @@ import { showToast } from '../component/toast/toast'
 
 export const showError = (e) => {
   console.error(e)
-  const isNetworkDown = navigator.onLine === false
-  const message =
-    (e && e.errmsg) ||
-    (isNetworkDown
-      ? 'Unable to connect to network'
-      : 'Unknown error occured, please try again')
-
+  const message = (e && e.errmsg) || 'failed'
   showToast(message, { type: 'error' })
-
-  // window.alert(message)
 }
 
 export const showErrorOnFail: <T extends Function>(t: T) => T = createDecorator(

@@ -53,15 +53,19 @@
         }
         &.sleep {
           animation-delay: 0.15s;
-          flex-grow: 0.618;
+          flex-grow: 1;
         }
         &.pisspoop {
           animation-delay: 0.2s;
-          flex-grow: 0.618;
+          flex-grow: 1;
+        }
+        &.custom {
+          animation-delay: 0.15s;
+          flex-grow: 1;
         }
         &.statistics {
-          animation-delay: 0.25s;
-          flex-grow: 1;
+          animation-delay: 0.2s;
+          flex-grow: 2;
         }
       }
     }

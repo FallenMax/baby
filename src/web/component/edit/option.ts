@@ -6,7 +6,7 @@ use(WiredCard)
 
 export type OptionEditorAttrs = {
   options: { key: string; text: string }[]
-  selected: string
+  selected: string | undefined
   themeColor?: string
   onChange(key: string): void
 }
@@ -15,7 +15,7 @@ export const OptionEditor: m.FactoryComponent<OptionEditorAttrs> = () => {
     view({ attrs: { options, selected, themeColor, onChange } }) {
       return m('.option-editor', [
         m(
-          '.options.f-row.f-c-stretch.f-m-end',
+          '.options.f-row.f-c-stretch.f-m-end.f-wrap',
           options.map((o) => {
             if (o.key === selected) {
               return m(

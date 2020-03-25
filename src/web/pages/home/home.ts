@@ -19,7 +19,10 @@ export const HomePage: m.FactoryComponent<HomePageAttrs> = () => {
   return {
     oncreate() {
       window.scrollTo(0, 0)
-      recordService.fetchRecords().then(() => {
+      Promise.all([
+        recordService.fetchRecords(),
+        recordService.fetchCustomTypes(),
+      ]).then(() => {
         m.redraw()
       })
     },
@@ -71,8 +74,6 @@ export const HomePage: m.FactoryComponent<HomePageAttrs> = () => {
                 },
                 'sleep',
               ),
-            ]),
-            m('.action-row.f-row.f-c-stretch', [
               m(
                 'wired-card.action.pisspoop.f-center',
                 {
@@ -83,6 +84,19 @@ export const HomePage: m.FactoryComponent<HomePageAttrs> = () => {
                   },
                 },
                 [m('', 'piss'), m('', 'poop')],
+              ),
+            ]),
+            m('.action-row.f-row.f-c-stretch', [
+              m(
+                'wired-card.action.custom.f-center',
+                {
+                  elevation: 3,
+                  fill: colors.custom,
+                  onclick() {
+                    m.route.set(paths['/custom'])
+                  },
+                },
+                [m('', 'custom event')],
               ),
               m(
                 'wired-card.action.statistics.f-center',
