@@ -3,6 +3,7 @@ import { WiredButton } from 'wired-elements'
 import { Records } from '../../../common/types'
 import { showToast } from '../../component/toast/toast'
 import { recordService } from '../../service/record.service'
+import { showErrorOnFail } from '../../util/client_error'
 import { use } from '../../util/use'
 import './form_footer.scss'
 use(WiredButton)
@@ -27,19 +28,18 @@ export const RecordSubmit: m.FactoryComponent<RecordSubmitAttrs> = () => {
             'wired-card.create-button',
             {
               elevation: 3,
-              async onclick() {
+              onclick: showErrorOnFail(async () => {
                 if (!record) {
                   return
                 }
-                try {
-                  await recordService.createRecord(record)
-                  history.back()
-                  showToast('record added')
-                } catch (error) {
-                  showToast('failed', { type: 'error' })
-                  console.error(error)
+                if (record.type === 'custom' && !record.subtype) {
+                  showToast('add or select a custom type first')
+                  return
                 }
-              },
+                await recordService.createRecord(record)
+                history.back()
+                showToast('record added')
+              }),
             },
             'submit',
           ),
@@ -48,22 +48,17 @@ export const RecordSubmit: m.FactoryComponent<RecordSubmitAttrs> = () => {
             'wired-card.update-button',
             {
               elevation: 3,
-              async onclick() {
+              onclick: showErrorOnFail(async () => {
                 if (!record) {
                   return
                 }
-                try {
-                  await recordService.updateRecord({
-                    id: attrs.guid,
-                    ...record,
-                  })
-                  history.back()
-                  showToast('record updated')
-                } catch (error) {
-                  showToast('failed', { type: 'error' })
-                  console.error(error)
-                }
-              },
+                await recordService.updateRecord({
+                  id: attrs.guid,
+                  ...record,
+                })
+                history.back()
+                showToast('record updated')
+              }),
             },
             'update',
           ),
@@ -72,7 +67,7 @@ export const RecordSubmit: m.FactoryComponent<RecordSubmitAttrs> = () => {
             'wired-card.delete-button',
             {
               elevation: 3,
-              async onclick() {
+              onclick: showErrorOnFail(async () => {
                 if (!record) {
                   return
                 }
@@ -80,15 +75,10 @@ export const RecordSubmit: m.FactoryComponent<RecordSubmitAttrs> = () => {
                   return
                 }
 
-                try {
-                  await recordService.deleteRecord(attrs.guid)
-                  history.back()
-                  showToast('record deleted')
-                } catch (error) {
-                  showToast('failed', { type: 'error' })
-                  console.error(error)
-                }
-              },
+                await recordService.deleteRecord(attrs.guid)
+                history.back()
+                showToast('record deleted')
+              }),
             },
             'delete',
           ),

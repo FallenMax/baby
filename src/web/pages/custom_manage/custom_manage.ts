@@ -18,7 +18,7 @@ export const CustomManagePage: m.FactoryComponent<CustomManagePageAttrs> = () =>
     async oncreate(vnode) {
       dom = vnode.dom as HTMLElement
       window.scrollTo(0, 0)
-      await recordService.fetchCustomTypes()
+      await recordService.fetchCustomTypes({ force: true })
       m.redraw()
     },
     view() {

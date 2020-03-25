@@ -1,4 +1,5 @@
-import { Records, User } from '../../common/types'
+import { ErrorCode, Records, User } from '../../common/types'
+import { UserError } from '../../common/util/error'
 import { generateUuid } from '../../common/util/gen_id'
 import { createDatabase, FindOption } from '../lib/database'
 import { audit } from './audit.service'
@@ -32,6 +33,14 @@ const createRecord = async (
     createAt: new Date(),
     updateAt: new Date(),
   }
+  if (record.type === 'custom') {
+    const types = await getCustomTypes({
+      userId: user.id,
+    })
+    if (!types.find((t) => t.id === record.subtype)) {
+      throw new UserError(ErrorCode.UNKNOWN_CUSTOM_TYPE)
+    }
+  }
   await RecordDb.add(record as Record)
   return record as Record
 }
@@ -55,6 +64,18 @@ const updateRecord = async (
   record: Partial<Record> & { id: string },
 ): Promise<Record> => {
   const { id } = record
+  const existed = await RecordDb.findOne({ id: record.id })
+  if (!existed) {
+    throw new UserError(ErrorCode.ITEM_INVALID)
+  }
+  if (record.type === 'custom' && record.subtype) {
+    const types = await getCustomTypes({
+      userId: existed.id,
+    })
+    if (!types.find((t) => t.id === record.subtype)) {
+      throw new UserError(ErrorCode.UNKNOWN_CUSTOM_TYPE)
+    }
+  }
   const updateAt = new Date()
   await RecordDb.update({ id }, { ...record, updateAt })
   const re = await RecordDb.findOne({ id })

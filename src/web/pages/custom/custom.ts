@@ -37,7 +37,7 @@ export const CustomPage: m.FactoryComponent<CustomPageAttrs> = () => {
     async oncreate(vnode) {
       window.scrollTo(0, 0)
       guid = m.route.param('guid')
-      await recordService.fetchCustomTypes()
+      await recordService.fetchCustomTypes({ force: true })
       if (guid) {
         action = 'update'
         record = (await recordService.fetchSingleRecord(guid)) as Records.Custom

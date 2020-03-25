@@ -82,6 +82,7 @@ export enum ErrorCode {
   DELETE_ITEM_NOT_FOUND,
   ITEM_INVALID,
   USER_NOT_EXIST,
+  UNKNOWN_CUSTOM_TYPE,
 }
 
 export const ErrorMessage: { [K in ErrorCode]: string } = {
@@ -102,6 +103,8 @@ export const ErrorMessage: { [K in ErrorCode]: string } = {
     'Record not found, please check and refresh',
   [ErrorCode.ITEM_INVALID]: 'Invalid record, please check again',
   [ErrorCode.USER_NOT_EXIST]: 'User not exist, please check and try again',
+  [ErrorCode.UNKNOWN_CUSTOM_TYPE]:
+    'Event type not exist, please refresh and try again',
 }
 
 export const getMessage = (e: ErrorCode) => {
