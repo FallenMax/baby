@@ -98,6 +98,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
     )
 
     const options: echarts.EChartOption = {
+      animation: false,
       tooltip: {
         show: true,
       },
