@@ -107,6 +107,9 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           type: 'time',
           min: dayStart,
           max: today,
+          axisLine: {
+            show: false,
+          },
           axisTick: {
             show: false,
           },
@@ -142,6 +145,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
         {
           name: '',
           type: 'value',
+          scale: true,
           axisLine: {
             show: false,
           },
@@ -158,6 +162,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
         {
           name: '',
           type: 'value',
+          scale: true,
           axisLine: {
             show: false,
           },
