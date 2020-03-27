@@ -17,56 +17,51 @@
     max-width: 400px;
   }
   .actions {
-    .action-row {
-      height: 200px;
-      margin-bottom: 10px;
-      .action + .action {
-        margin-left: 10px;
-      }
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    margin-bottom: 10px;
 
-      .action {
-        color: white;
-        text-align: center;
-        user-select: none;
-        cursor: pointer;
-        animation: 0.3s show both;
-        will-change: transform, opacity;
-        flex-basis: 0;
-        position: relative;
-        &:hover,
-        &:focus {
-          &::after {
-            content: ' ';
-            display: block;
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.2);
-            pointer-events: none;
-          }
+    .action {
+      height: 200px;
+      color: white;
+      text-align: center;
+      user-select: none;
+      cursor: pointer;
+      animation: 0.3s show both;
+      will-change: transform, opacity;
+      position: relative;
+      &:hover,
+      &:focus {
+        &::after {
+          content: ' ';
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          bottom: 0;
+          background: rgba(255, 255, 255, 0.2);
+          pointer-events: none;
         }
-        &.eat {
-          animation-delay: 0.1s;
-          flex-grow: 1;
-        }
-        &.sleep {
-          animation-delay: 0.15s;
-          flex-grow: 1;
-        }
-        &.pisspoop {
-          animation-delay: 0.2s;
-          flex-grow: 1;
-        }
-        &.custom {
-          animation-delay: 0.15s;
-          flex-grow: 1;
-        }
-        &.statistics {
-          animation-delay: 0.2s;
-          flex-grow: 2;
-        }
+      }
+      &.eat {
+        animation-delay: 0.1s;
+      }
+      &.sleep {
+        animation-delay: 0.15s;
+      }
+      &.pisspoop {
+        animation-delay: 0.2s;
+      }
+      &.custom {
+        animation-delay: 0.15s;
+      }
+      &.statistics {
+        animation-delay: 0.2s;
+        grid-column-end: span 2;
       }
     }
   }

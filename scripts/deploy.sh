@@ -32,10 +32,10 @@ ssh $host -p$port << EOF
 
   echo 'updating...'
   cd $app_dir
+  git fetch --all --prune
   git branch -D tmp || echo 'no tmp'
   git checkout -b tmp
   git branch -D master || echo 'no master'
-  git fetch --all --prune
   git checkout master
 
 

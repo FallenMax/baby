@@ -51,65 +51,62 @@ export const HomePage: m.FactoryComponent<HomePageAttrs> = () => {
           // m('.baby-name', me ? me.name : '-'),
 
           m('.actions', [
-            m('.action-row.f-row.f-c-stretch', [
-              m(
-                'wired-card.action.eat.f-center',
-                {
-                  elevation: 3,
-                  fill: colors.eat,
-                  onclick() {
-                    m.route.set(paths['/eat'])
-                  },
+            m(
+              'wired-card.action.eat.f-center',
+              {
+                elevation: 3,
+                fill: colors.eat,
+                onclick() {
+                  m.route.set(paths['/eat'])
                 },
-                'eat',
-              ),
-              m(
-                'wired-card.action.sleep.f-center',
-                {
-                  elevation: 3,
-                  fill: colors.sleep,
-                  onclick() {
-                    m.route.set(paths['/sleep'])
-                  },
+              },
+              'eat',
+            ),
+            m(
+              'wired-card.action.sleep.f-center',
+              {
+                elevation: 3,
+                fill: colors.sleep,
+                onclick() {
+                  m.route.set(paths['/sleep'])
                 },
-                'sleep',
-              ),
-              m(
-                'wired-card.action.pisspoop.f-center',
-                {
-                  elevation: 3,
-                  fill: colors.pisspoop,
-                  onclick() {
-                    m.route.set(paths['/pisspoop'])
-                  },
+              },
+              'sleep',
+            ),
+            m(
+              'wired-card.action.pisspoop.f-center',
+              {
+                elevation: 3,
+                fill: colors.pisspoop,
+                onclick() {
+                  m.route.set(paths['/pisspoop'])
                 },
-                [m('', 'piss'), m('', 'poop')],
-              ),
-            ]),
-            m('.action-row.f-row.f-c-stretch', [
-              m(
-                'wired-card.action.custom.f-center',
-                {
-                  elevation: 3,
-                  fill: colors.custom,
-                  onclick() {
-                    m.route.set(paths['/custom'])
-                  },
+              },
+              [m('', 'piss'), m('', 'poop')],
+            ),
+
+            m(
+              'wired-card.action.custom.f-center',
+              {
+                elevation: 3,
+                fill: colors.custom,
+                onclick() {
+                  m.route.set(paths['/custom'])
                 },
-                [m('', 'custom event')],
-              ),
-              m(
-                'wired-card.action.statistics.f-center',
-                {
-                  elevation: 3,
-                  fill: colors.statistics,
-                  onclick() {
-                    m.route.set(paths['/statistics'])
-                  },
+              },
+              [m('', 'custom event')],
+            ),
+            m(
+              'wired-card.action.statistics.f-center',
+              {
+                elevation: 3,
+                fill: colors.statistics,
+                onclick() {
+                  m.route.set(paths['/statistics'])
                 },
-                [m('', 'history'), m('', 'statistics')],
-              ),
-            ]),
+              },
+              [m('', 'history'), m('', 'statistics')],
+            ),
           ]),
 
           m('.footer.f-v-center', [
