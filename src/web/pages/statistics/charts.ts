@@ -30,7 +30,12 @@ import 'echarts/lib/component/tooltip'
 import * as echarts from 'echarts/lib/echarts'
 import m from 'mithril'
 import { Records } from '../../../common/types'
-import { DAY, getDateString, HOUR } from '../../../common/util/time'
+import {
+  DAY,
+  getDateString,
+  HOUR,
+  parseDateString,
+} from '../../../common/util/time'
 import { colors } from '../../style/color'
 import './charts.scss'
 export { echarts }
@@ -42,6 +47,11 @@ export type StatisticChartAttrs = {
 export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
   let ec: echarts.ECharts
   const redraw = ({ records, dateRange }: StatisticChartAttrs) => {
+    const today = getDateString(new Date())
+    const yesterday = getDateString(new Date(new Date().getTime() - DAY))
+    const dayStart = getDateString(
+      new Date(new Date().getTime() - DAY * dateRange),
+    )
     const data = Object.entries(records)
       .map(([day, records]) => {
         let eatCount = 0
@@ -87,15 +97,16 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
         return { day, eatAmount, minuteSlept }
       })
       .filter(({ day, eatAmount, minuteSlept }) => {
+        if (parseDateString(day) < parseDateString(dayStart)) {
+          return false
+        }
+        if (parseDateString(day) > parseDateString(yesterday)) {
+          return false
+        }
         return eatAmount || minuteSlept
       })
     const eatData = data.map(({ day, eatAmount }) => [day, eatAmount])
     const sleepData = data.map(({ day, minuteSlept }) => [day, minuteSlept])
-
-    const today = getDateString(new Date())
-    const dayStart = getDateString(
-      new Date(new Date().getTime() - DAY * dateRange),
-    )
 
     const options: echarts.EChartOption = {
       animation: false,
@@ -106,7 +117,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
         {
           type: 'time',
           min: dayStart,
-          max: today,
+          max: yesterday,
           axisLine: {
             show: false,
           },
@@ -196,7 +207,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           type: 'line',
           yAxisIndex: 0,
           data: eatData,
-          // smooth: true,
+          smooth: true,
           symbol: 'circle',
           symbolSize: 3,
           lineStyle: {
@@ -217,7 +228,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           type: 'line',
           yAxisIndex: 1,
           data: sleepData,
-          // smooth: true,
+          smooth: true,
           symbol: 'circle',
           symbolSize: 3,
           lineStyle: {
