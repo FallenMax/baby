@@ -1,4 +1,4 @@
-;(function() {
+;(function () {
   var isSupportedBrowser = typeof Proxy === 'function'
   if (!isSupportedBrowser) {
     document.body.textContent = 'Sorry, your current browser is not supported.'

@@ -1,5 +1,4 @@
 import * as cors from '@koa/cors'
-import * as multipartParser from '@koa/multer'
 import * as http from 'http'
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
@@ -8,8 +7,8 @@ import * as logger from 'koa-logger'
 import * as session from 'koa-session'
 import { config } from './config'
 import { error } from './middleware/error.middleware'
+import { fixRecord } from './migrate/fix_date'
 import { routes } from './router'
-import { fileService } from './service/file.service'
 import { sessionService } from './service/session.service'
 import { isDev, isTesting } from './utils/env'
 
@@ -23,8 +22,6 @@ const panic = (e: any) => {
 export const start = () => {
   return new Promise((resolve) => {
     console.info('--- start ---')
-    fileService.ensureDirectory(config.uploadDir)
-    fileService.ensureDirectory(config.dataDir)
 
     const app = new Koa()
 
@@ -32,15 +29,6 @@ export const start = () => {
     app.use(error())
     app.use(logger())
     app.use(compress())
-    // app.use(
-    //   helmet({
-    //     contentSecurityPolicy: {
-    //       directives: {
-    //         defaultSrc: ["'self'"],
-    //       },
-    //     },
-    //   }),
-    // )
     app.use(
       session(
         {
@@ -56,11 +44,9 @@ export const start = () => {
       ),
     )
     app.use(bodyParser()) // parse: json form text to ctx.request.body
-    app.use(multipartParser().any()) // parse: multipart/form-data (e.g. file upload) to ctx.request.files
     app.use(
       cors({
         origin: (ctx) => {
-          // TODO white list
           if (isDev) {
             return ctx.request.headers.origin
           } else {
@@ -92,5 +78,12 @@ export const quit = () => {
 }
 
 if (!isTesting) {
-  start().catch(panic)
+  ;(async () => {
+    try {
+      await fixRecord(false)
+      await start()
+    } catch (error) {
+      panic(error)
+    }
+  })()
 }

@@ -1,4 +1,4 @@
-import { ReturnPromise } from './util.types'
+import { MakeAsync } from './util.types'
 
 //-------------- Domains --------------
 
@@ -139,4 +139,4 @@ export type ApiSync = {
   }
 }
 
-export type Api = ReturnPromise<ApiSync>
+export type ApiAsync = MakeAsync<ApiSync>

@@ -2,6 +2,7 @@ import * as Datastore from 'nedb'
 import * as path from 'path'
 import { filterObject } from '../../common/util/object/filter_object'
 import { config } from '../config'
+import { fileService } from '../service/file.service'
 import { promisifyAll } from '../utils/promisify'
 
 type Id = { id: string }
@@ -25,14 +26,15 @@ export interface Database<T extends Id> {
   update: (query: Partial<T> & Id, item: Nullable<T>) => Promise<T>
   upsert: (query: Partial<T> & Id, item: T) => Promise<void>
   setIndex(field: keyof T): void
-  destroy: () => void
+  close: () => void
 }
 
 const databases: {
   [key: string]: Nedb & { [K: string]: (...args: any[]) => Promise<any> }
 } = {}
 
-export function createDatabase<T extends { id: string }>(
+fileService.ensureDirectory(config.dataDir)
+export function openDatabase<T extends { id: string }>(
   name: string,
 ): Database<T> {
   if (!databases[name]) {
@@ -99,9 +101,52 @@ export function createDatabase<T extends { id: string }>(
         fieldName: field as string,
       })
     },
-    destroy: () => {
+    close: () => {
       db.persistence.stopAutocompaction()
     },
   }
   return database
+}
+
+const DELETE = 'DELETE' as const
+export const migrateDatabase = async <T extends { id: string }>(
+  db: Database<T>,
+  updater: (entry: T) => T | undefined | typeof DELETE,
+  options?: {
+    dryrun?: boolean
+  },
+) => {
+  const { dryrun = false } = options || {}
+
+  console.warn(`-------- migrating datebase ----------`)
+  const items = await db.findAll()
+  const total = items.length
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index]
+    const next = updater(item)
+    if (!next) {
+      console.warn(`${index + 1}/${total}: skip `)
+    } else if (next === DELETE) {
+      console.warn(`${index + 1}/${total}: delete `)
+      if (!dryrun) {
+        if (item.id) {
+          await db.remove({ id: item.id } as Partial<T>)
+        } else {
+          console.log(item)
+          throw new Error('id not found in  item')
+        }
+      }
+    } else {
+      console.warn(`${index + 1}/${total}: update -> ${JSON.stringify(next)}`)
+      if (!dryrun) {
+        if (item.id) {
+          await db.update({ id: item.id } as any, next)
+        } else {
+          console.log(item)
+          throw new Error('id not found in  item')
+        }
+      }
+    }
+  }
+  console.warn('------------------')
 }

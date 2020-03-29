@@ -2,7 +2,7 @@ import * as crypto from 'crypto'
 import { ErrorCode, User } from '../../common/types'
 import { UserError } from '../../common/util/error'
 import { generateId } from '../../common/util/gen_id'
-import { createDatabase } from '../lib/database'
+import { openDatabase } from '../lib/database'
 import { ExtendedContext } from '../types/context'
 import { audit } from './audit.service'
 
@@ -17,7 +17,7 @@ export type Account = User & Sensitive
 
 //-------------- db --------------
 
-const db = createDatabase<Account>('account')
+const db = openDatabase<Account>('account')
 db.setIndex('name')
 
 //-------------- utils --------------

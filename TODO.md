@@ -1,0 +1,3 @@
+- [x] api proxy preserves type like Date
+- [] type checking on server-side
+- [] `resource` abstraction

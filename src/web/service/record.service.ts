@@ -1,7 +1,7 @@
 import m from 'mithril'
 import { Records } from '../../common/types'
 import { assertNever } from '../../common/util/assert'
-import { api } from '../api'
+import { api } from '../api_client'
 
 type Record = Records.Record
 type RecordDraft = Records.RecordDraft
@@ -49,26 +49,14 @@ export const recordService = {
     if (this.recordsFetched && !force) {
       return
     }
-    this.records = (await api.record.getMyRecords({}))
-      .map((r) => {
-        r.time = new Date(r.time)
-        if ('amount' in r) {
-          r.amount = Number(r.amount)
-        }
-        return r
-      })
-      .sort((a, b) => b.time.getTime() - a.time.getTime())
+    this.records = (await api.record.getMyRecords({})).sort(
+      (a, b) => b.time.getTime() - a.time.getTime(),
+    )
     this.recordsFetched = true
     m.redraw()
   },
   async fetchSingleRecord(id: string) {
     const record = await api.record.getMyRecordById({ id })
-    if (record) {
-      record.time = new Date(record.time)
-      if ('amount' in record) {
-        record.amount = Number(record.amount)
-      }
-    }
     return record
   },
   async updateRecord(record: RecordDraft & { id: string }) {

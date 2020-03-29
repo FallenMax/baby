@@ -1,7 +1,7 @@
 import { generateUuid } from '../../common/util/gen_id'
 import { decorateObject } from '../../common/util/object/decorator'
 import { mapObject } from '../../common/util/object/map_object'
-import { createDatabase } from '../lib/database'
+import { openDatabase } from '../lib/database'
 
 type Operation = {
   id: string
@@ -12,7 +12,7 @@ type Operation = {
   success: boolean
 }
 
-const db = createDatabase<Operation>('operation')
+const db = openDatabase<Operation>('operation')
 
 const auditService = {
   log(

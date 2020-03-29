@@ -14,5 +14,6 @@ export const config = {
   uploadDir: env.UPLOAD_DIR || path.resolve(rootDir, './upload'),
 
   publicPath: env.PUBLIC_PATH || 'public',
+  apiPath: env.API_PATH || 'api',
   uploadPath: env.PUBLIC_PATH || 'upload',
 }

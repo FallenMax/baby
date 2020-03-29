@@ -1,17 +1,17 @@
 import { ErrorCode, Records, User } from '../../common/types'
 import { UserError } from '../../common/util/error'
 import { generateUuid } from '../../common/util/gen_id'
-import { createDatabase, FindOption } from '../lib/database'
+import { FindOption, openDatabase } from '../lib/database'
 import { audit } from './audit.service'
 
 type Record = Records.Record
 type CustomType = Records.CustomType
 
-const RecordDb = createDatabase<Record>('record')
+const RecordDb = openDatabase<Record>('record')
 RecordDb.setIndex('id')
 RecordDb.setIndex('babyId')
 
-const CustomTypeDb = createDatabase<CustomType>('custom_type')
+const CustomTypeDb = openDatabase<CustomType>('custom_type')
 CustomTypeDb.setIndex('id')
 CustomTypeDb.setIndex('userId')
 
@@ -70,7 +70,7 @@ const updateRecord = async (
   }
   if (record.type === 'custom' && record.subtype) {
     const types = await getCustomTypes({
-      userId: existed.id,
+      userId: existed.babyId,
     })
     if (!types.find((t) => t.id === record.subtype)) {
       throw new UserError(ErrorCode.UNKNOWN_CUSTOM_TYPE)

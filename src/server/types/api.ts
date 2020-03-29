@@ -1,8 +1,5 @@
-import { ExtendedContext } from './context'
-import { ReturnPromise } from '../../common/util.types'
 import { ApiSync } from '../../common/types'
-import { AddParameter, ParameterToMulterFile } from '../utils/api_map'
+import { AddParameter, MakeAsync } from '../../common/util.types'
+import { ExtendedContext } from './context'
 
-export type ApiWithContext = ReturnPromise<
-  AddParameter<ParameterToMulterFile<ApiSync>, ExtendedContext>
->
+export type ApiWithContext = MakeAsync<AddParameter<ApiSync, ExtendedContext>>

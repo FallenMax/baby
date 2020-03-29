@@ -1,4 +1,4 @@
-import { createDatabase } from '../lib/database'
+import { openDatabase } from '../lib/database'
 
 export interface SessionItem {
   id: string
@@ -8,7 +8,7 @@ export interface SessionItem {
   }>
 }
 
-const db = createDatabase<SessionItem>('session')
+const db = openDatabase<SessionItem>('session')
 
 const get = async (id: string): Promise<SessionItem['content'] | undefined> => {
   const item = await db.findOne({ id })

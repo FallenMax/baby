@@ -1,4 +1,4 @@
-import { createDatabase } from './database'
+import { openDatabase } from './database'
 
 test('database', async () => {
   let item1 = {
@@ -43,7 +43,7 @@ test('database', async () => {
   }
 
   // initial
-  const db = createDatabase<any>('TEST')
+  const db = openDatabase<any>('TEST')
   await db.removeMulti({}) // reset
   db.setIndex('id')
 
