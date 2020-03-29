@@ -7,9 +7,11 @@
 
   try {
     const Sentry = require('@sentry/browser')
+    const revision = process.env.GIT_REVISION
+    console.log('revision: ', revision)
     Sentry.init({
       dsn: 'https://4065b37e90d846f49e0ee629d985a60e@sentry.io/212251',
-      release: config.release,
+      release: revision,
     })
   } catch (error) {
     console.error('failed to start sentry')
@@ -17,7 +19,6 @@
 })()
 
 import m from 'mithril'
-import { config } from './config'
 import { CustomPage } from './pages/custom/custom'
 import { CustomManagePage } from './pages/custom_manage/custom_manage'
 import { EatPage } from './pages/eat/eat'
