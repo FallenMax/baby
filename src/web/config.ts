@@ -13,8 +13,10 @@ const port = Number(
 
 const hostname = env.HOST_NAME || location.hostname
 const host = port ? `${hostname}:${port}` : hostname
+const release = env.GIT_REVISION
 
 export const config = {
   GA_ID: 'UA-84154809-5',
   host,
+  release,
 }

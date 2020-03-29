@@ -4,9 +4,20 @@
     document.body.textContent = 'Sorry, your current browser is not supported.'
     throw new Error('halt')
   }
+
+  try {
+    const Sentry = require('@sentry/browser')
+    Sentry.init({
+      dsn: 'https://4065b37e90d846f49e0ee629d985a60e@sentry.io/212251',,
+      release: config.release
+    })
+  } catch (error) {
+    console.error('failed to start sentry')
+  }
 })()
 
 import m from 'mithril'
+import { config } from './config'
 import { CustomPage } from './pages/custom/custom'
 import { CustomManagePage } from './pages/custom_manage/custom_manage'
 import { EatPage } from './pages/eat/eat'

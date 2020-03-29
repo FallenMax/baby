@@ -20,7 +20,7 @@
     "test:watch": "export NODE_ENV=test PORT=4444  && jest --watch --verbose false",
     "server:build": "tsc --project ./src/tsconfig.server.json",
     "server:watch": "ts-node-dev --transpileOnly --no-notify ./src/server/server.ts",
-    "web:build": "parcel build src/web/index.html --out-dir public --public-url '/public' --no-source-maps --detailed-report 10",
+    "web:build": "parcel build src/web/index.html --out-dir public --public-url '/public' --detailed-report 10",
     "web:watch": "parcel src/web/index.html --out-dir public --public-url '/public' --open",
     "deploy": "./scripts/deploy.sh"
   },
@@ -28,6 +28,7 @@
     "@koa/cors": "^3.0.0",
     "@koa/multer": "^2.0.2",
     "@koa/router": "^8.0.8",
+    "@sentry/browser": "^5.15.4",
     "axios": "^0.19.2",
     "echarts": "^4.7.0",
     "fast-deep-equal": "^3.1.1",

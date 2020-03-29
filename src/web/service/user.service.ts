@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser'
 import { api } from '../api_client'
 
 export type User = {
@@ -20,6 +21,10 @@ export const userService = {
     this.me = await api.user.getMe()
     if (this.me) {
       tagUser(this.me.id)
+      Sentry.setUser({
+        id: this.me.id,
+        username: this.me.name,
+      })
     }
   },
 

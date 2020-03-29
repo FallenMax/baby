@@ -38,6 +38,7 @@ ssh $host -p$port << EOF
   git branch -D master || echo 'no master'
   git checkout master
 
+  export GIT_REVISION=$(git rev-parse HEAD)
 
   echo 'install...'
   yarn
