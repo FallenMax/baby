@@ -228,9 +228,9 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           axisLabel: {
             // show: false,
             color: '#888',
-            // inside: true,
+            inside: true,
             showMinLabel: false,
-            align: 'left',
+            align: 'right',
             verticalAlign: 'top',
             fontSize: 10,
             formatter(p) {
@@ -257,9 +257,9 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           axisLabel: {
             // show: false,
             color: '#888',
-            // inside: true,
+            inside: true,
             showMinLabel: false,
-            align: 'left',
+            align: 'right',
             verticalAlign: 'top',
             fontSize: 10,
             formatter(p) {
