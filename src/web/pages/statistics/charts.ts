@@ -45,7 +45,7 @@ export type StatisticChartAttrs = {
   dateRange: number
 }
 export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
-  let ec: echarts.ECharts
+  let eatChart: echarts.ECharts
   const redraw = ({ records, dateRange }: StatisticChartAttrs) => {
     const today = getDateString(new Date())
     const yesterday = getDateString(new Date(new Date().getTime() - DAY))
@@ -108,10 +108,28 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
     const eatData = data.map(({ day, eatAmount }) => [day, eatAmount])
     const sleepData = data.map(({ day, minuteSlept }) => [day, minuteSlept])
 
+    const lineStyle = {
+      color: '#ddd',
+    }
+
     const options: echarts.EChartOption = {
+      textStyle: {
+        // fontSize: 10,
+      },
       animation: false,
       tooltip: {
         show: true,
+      },
+      legend: {
+        show: true,
+        // icon: 'none',
+        // left: '-30px',
+        // top: 0,
+        textStyle: {
+          // color: colors.eat,
+          // fontWeight: 'bold',
+        },
+        itemGap: 15,
       },
       xAxis: [
         {
@@ -119,7 +137,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           min: dayStart,
           max: yesterday,
           axisLine: {
-            show: false,
+            lineStyle,
           },
           axisTick: {
             show: false,
@@ -127,15 +145,59 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           splitLine: {
             show: false,
           },
-
+          boundaryGap: ['20%', '20%'],
           // @ts-ignore
           maxInterval: dateRange <= 7 ? 3600 * 24 * 1000 : undefined,
           minInterval: 3600 * 24 * 1000,
+          axisLabel: {
+            show: false,
+            formatter(val) {
+              return getDateString(new Date(val), true)
+            },
+            color: '#888',
+            verticalAlign: 'top',
+            fontSize: 10,
+          },
+          axisPointer: {
+            show: true,
+            type: 'line',
+            snap: true,
+            z: 0,
+            label: {
+              show: false,
+            },
+            lineStyle: {
+              width: 2,
+              color: '#ddd',
+            },
+          },
+        },
 
+        {
+          gridIndex: 1,
+          type: 'time',
+          min: dayStart,
+          max: yesterday,
+          axisLine: {
+            lineStyle,
+          },
+          axisTick: {
+            show: false,
+          },
+          splitLine: {
+            show: false,
+          },
+          boundaryGap: ['20%', '20%'],
+          // @ts-ignore
+          maxInterval: dateRange <= 7 ? 3600 * 24 * 1000 : undefined,
+          minInterval: 3600 * 24 * 1000,
           axisLabel: {
             formatter(val) {
               return getDateString(new Date(val), true)
             },
+            color: '#888',
+            verticalAlign: 'top',
+            fontSize: 10,
           },
           axisPointer: {
             show: true,
@@ -156,7 +218,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
         {
           name: '',
           type: 'value',
-          scale: true,
+          position: 'right',
           axisLine: {
             show: false,
           },
@@ -164,42 +226,151 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
             show: false,
           },
           axisLabel: {
-            show: false,
+            // show: false,
+            color: '#888',
+            // inside: true,
+            showMinLabel: false,
+            align: 'left',
+            verticalAlign: 'top',
+            fontSize: 10,
+            formatter(p) {
+              return p + 'ml'
+            },
           },
           splitLine: {
             show: false,
+            lineStyle,
+          },
+          splitNumber: 2,
+        },
+        {
+          gridIndex: 1,
+          name: '',
+          type: 'value',
+          position: 'right',
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLabel: {
+            // show: false,
+            color: '#888',
+            // inside: true,
+            showMinLabel: false,
+            align: 'left',
+            verticalAlign: 'top',
+            fontSize: 10,
+            formatter(p) {
+              return p + 'h'
+            },
+          },
+          splitLine: {
+            show: false,
+            lineStyle,
+          },
+          splitNumber: 2,
+        },
+      ],
+
+      grid: [
+        {
+          left: '40px',
+          right: '40px',
+          top: '30px',
+          bottom: '50%',
+          // containLabel: true,
+        },
+        {
+          left: '40px',
+          right: '40px',
+          top: '50%',
+          bottom: '30px',
+          // containLabel: true,
+        },
+      ],
+      series: [
+        {
+          name: 'eat (ml)',
+          type: 'line',
+          yAxisIndex: 0,
+          data: eatData,
+          symbol: 'circle',
+          symbolSize: 3,
+          lineStyle: {
+            color: colors.eat,
+            width: 2,
+          },
+          itemStyle: {
+            color: colors.eat,
+          },
+          label: {
+            show: dateRange <= 7,
+            textBorderColor: 'white',
+            textBorderWidth: 1,
+          },
+          areaStyle: {
+            // @ts-ignore
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: colors.eat + 'aa',
+              },
+              {
+                offset: 1,
+                color: colors.eat + '00',
+              },
+            ]),
           },
         },
         {
-          name: '',
-          type: 'value',
-          scale: true,
-          axisLine: {
-            show: false,
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          name: 'sleep (hour)',
+          type: 'line',
+          data: sleepData as any,
+          symbol: 'circle',
+          symbolSize: 3,
+          lineStyle: {
+            color: colors.sleep,
+            width: 2,
           },
-          axisTick: {
-            show: false,
+          itemStyle: {
+            color: colors.sleep,
           },
-          axisLabel: {
-            show: false,
+          label: {
+            show: dateRange <= 7,
+            textBorderColor: 'white',
+            textBorderWidth: 1,
           },
-          splitLine: {
-            show: false,
+          areaStyle: {
+            // @ts-ignore
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: colors.sleep + 'aa',
+              },
+              {
+                offset: 1,
+                color: colors.sleep + '00',
+              },
+            ]),
           },
         },
       ],
+    }
+    const eatOptions: echarts.EChartOption = {
+      ...options,
       legend: {
         show: true,
-        icon: 'circle',
-        right: 0,
-        itemGap: 15,
-      },
-      grid: {
-        left: '20px',
-        right: '20px',
-        top: '40px',
-        bottom: '20px',
-        containLabel: true,
+        icon: 'none',
+        left: '-30px',
+        top: 0,
+        textStyle: {
+          color: colors.eat,
+          fontWeight: 'bold',
+        },
       },
       series: [
         {
@@ -207,7 +378,6 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
           type: 'line',
           yAxisIndex: 0,
           data: eatData,
-          smooth: true,
           symbol: 'circle',
           symbolSize: 3,
           lineStyle: {
@@ -221,14 +391,27 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
             show: dateRange <= 7,
             textBorderColor: 'white',
             textBorderWidth: 1,
+          },
+          areaStyle: {
+            // @ts-ignore
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: colors.eat + 'aa',
+              },
+              {
+                offset: 1,
+                color: colors.eat + '00',
+              },
+            ]),
           },
         },
         {
+          xAxisIndex: 1,
+          yAxisIndex: 1,
           name: 'sleep (hour)',
           type: 'line',
-          yAxisIndex: 1,
-          data: sleepData,
-          smooth: true,
+          data: sleepData as any,
           symbol: 'circle',
           symbolSize: 3,
           lineStyle: {
@@ -242,16 +425,78 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
             show: dateRange <= 7,
             textBorderColor: 'white',
             textBorderWidth: 1,
+          },
+          areaStyle: {
+            // @ts-ignore
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: colors.sleep + 'aa',
+              },
+              {
+                offset: 1,
+                color: colors.sleep + '00',
+              },
+            ]),
           },
         },
       ],
     }
-    ec.setOption(options)
+    console.log('eatOptions ', eatOptions)
+    const sleepOptions: echarts.EChartOption = {
+      ...options,
+      legend: {
+        show: true,
+        icon: 'none',
+        left: '-30px',
+        top: 0,
+        textStyle: {
+          color: colors.sleep,
+          fontWeight: 'bold',
+        },
+      },
+      series: [
+        {
+          name: 'sleep (hour)',
+          type: 'line',
+          data: sleepData as any,
+          symbol: 'circle',
+          symbolSize: 3,
+          lineStyle: {
+            color: colors.sleep,
+            width: 2,
+          },
+          itemStyle: {
+            color: colors.sleep,
+          },
+          label: {
+            show: dateRange <= 7,
+            textBorderColor: 'white',
+            textBorderWidth: 1,
+          },
+          areaStyle: {
+            // @ts-ignore
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: colors.sleep + 'aa',
+              },
+              {
+                offset: 1,
+                color: colors.sleep + '00',
+              },
+            ]),
+          },
+        },
+      ],
+    }
+    console.log('sleepOptions ', sleepOptions)
+    eatChart.setOption(options)
   }
   return {
     oncreate(vnode) {
-      ec = echarts.init(
-        vnode.dom.querySelector('.chart-container') as HTMLDivElement,
+      eatChart = echarts.init(
+        vnode.dom.querySelector('.chart-container.eat-chart') as HTMLDivElement,
       )
       redraw(vnode.attrs)
     },
@@ -260,7 +505,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
       return false
     },
     view({ attrs }) {
-      return m('.statistics-chart', [m('.chart-container')])
+      return m('.statistics-chart', [m('.chart-container.eat-chart')])
     },
   }
 }
