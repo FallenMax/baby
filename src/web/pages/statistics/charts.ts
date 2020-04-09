@@ -30,6 +30,7 @@ import 'echarts/lib/component/tooltip'
 import * as echarts from 'echarts/lib/echarts'
 import m from 'mithril'
 import { Records } from '../../../common/types'
+import { toRgba } from '../../../common/util/color'
 import {
   DAY,
   getDateString,
@@ -45,9 +46,8 @@ export type StatisticChartAttrs = {
   dateRange: number
 }
 export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
-  let eatChart: echarts.ECharts
+  let chart: echarts.ECharts
   const redraw = ({ records, dateRange }: StatisticChartAttrs) => {
-    const today = getDateString(new Date())
     const yesterday = getDateString(new Date(new Date().getTime() - DAY))
     const dayStart = getDateString(
       new Date(new Date().getTime() - DAY * dateRange),
@@ -172,7 +172,6 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
             },
           },
         },
-
         {
           gridIndex: 1,
           type: 'time',
@@ -315,11 +314,11 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
-                color: colors.eat + 'aa',
+                color: toRgba(colors.eat + 'aa'),
               },
               {
                 offset: 1,
-                color: colors.eat + '00',
+                color: toRgba(colors.eat + '00'),
               },
             ]),
           },
@@ -349,154 +348,23 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
-                color: colors.sleep + 'aa',
+                color: toRgba(colors.sleep + 'aa'),
               },
               {
                 offset: 1,
-                color: colors.sleep + '00',
+                color: toRgba(colors.sleep + '00'),
               },
             ]),
           },
         },
       ],
     }
-    const eatOptions: echarts.EChartOption = {
-      ...options,
-      legend: {
-        show: true,
-        icon: 'none',
-        left: '-30px',
-        top: 0,
-        textStyle: {
-          color: colors.eat,
-          fontWeight: 'bold',
-        },
-      },
-      series: [
-        {
-          name: 'eat (ml)',
-          type: 'line',
-          yAxisIndex: 0,
-          data: eatData,
-          symbol: 'circle',
-          symbolSize: 3,
-          lineStyle: {
-            color: colors.eat,
-            width: 2,
-          },
-          itemStyle: {
-            color: colors.eat,
-          },
-          label: {
-            show: dateRange <= 7,
-            textBorderColor: 'white',
-            textBorderWidth: 1,
-          },
-          areaStyle: {
-            // @ts-ignore
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: colors.eat + 'aa',
-              },
-              {
-                offset: 1,
-                color: colors.eat + '00',
-              },
-            ]),
-          },
-        },
-        {
-          xAxisIndex: 1,
-          yAxisIndex: 1,
-          name: 'sleep (hour)',
-          type: 'line',
-          data: sleepData as any,
-          symbol: 'circle',
-          symbolSize: 3,
-          lineStyle: {
-            color: colors.sleep,
-            width: 2,
-          },
-          itemStyle: {
-            color: colors.sleep,
-          },
-          label: {
-            show: dateRange <= 7,
-            textBorderColor: 'white',
-            textBorderWidth: 1,
-          },
-          areaStyle: {
-            // @ts-ignore
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: colors.sleep + 'aa',
-              },
-              {
-                offset: 1,
-                color: colors.sleep + '00',
-              },
-            ]),
-          },
-        },
-      ],
-    }
-    console.log('eatOptions ', eatOptions)
-    const sleepOptions: echarts.EChartOption = {
-      ...options,
-      legend: {
-        show: true,
-        icon: 'none',
-        left: '-30px',
-        top: 0,
-        textStyle: {
-          color: colors.sleep,
-          fontWeight: 'bold',
-        },
-      },
-      series: [
-        {
-          name: 'sleep (hour)',
-          type: 'line',
-          data: sleepData as any,
-          symbol: 'circle',
-          symbolSize: 3,
-          lineStyle: {
-            color: colors.sleep,
-            width: 2,
-          },
-          itemStyle: {
-            color: colors.sleep,
-          },
-          label: {
-            show: dateRange <= 7,
-            textBorderColor: 'white',
-            textBorderWidth: 1,
-          },
-          areaStyle: {
-            // @ts-ignore
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: colors.sleep + 'aa',
-              },
-              {
-                offset: 1,
-                color: colors.sleep + '00',
-              },
-            ]),
-          },
-        },
-      ],
-    }
-    console.log('sleepOptions ', sleepOptions)
-    eatChart.setOption(options)
+    chart.setOption(options)
   }
   return {
     oncreate(vnode) {
-      eatChart = echarts.init(
-        vnode.dom.querySelector('.chart-container.eat-chart') as HTMLDivElement,
+      chart = echarts.init(
+        vnode.dom.querySelector('.chart-container') as HTMLDivElement,
       )
       redraw(vnode.attrs)
     },
@@ -505,7 +373,7 @@ export const StatisticChart: m.FactoryComponent<StatisticChartAttrs> = () => {
       return false
     },
     view({ attrs }) {
-      return m('.statistics-chart', [m('.chart-container.eat-chart')])
+      return m('.statistics-chart', [m('.chart-container')])
     },
   }
 }
