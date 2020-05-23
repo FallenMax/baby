@@ -51,13 +51,16 @@ const getRecordById = async (id: string): Promise<Record | undefined> => {
 
 const getRecords = async (
   query: Partial<Record>,
-  option: FindOption<Record> = {
-    sort: {
+  {
+    limit,
+    skip,
+    sort = {
       time: -1,
     },
-  },
+  }: FindOption<Record> = {},
 ): Promise<Record[]> => {
-  return await RecordDb.find(query, option)
+  const result = await RecordDb.find(query, { limit, skip, sort })
+  return result
 }
 
 const updateRecord = async (

@@ -146,7 +146,7 @@ const selectRecordsWithinRange = (
 let scrollPosition = 0
 export type StatisticsPageAttrs = {}
 export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
-  let dateRange: 7 | 30 = 7
+  let dateRange: 7 | 30 | 365 = 7
   const startEdit = (rec: Records.Record) => {
     const path = {
       eat: paths['/eat'],
@@ -168,6 +168,18 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
     const uri = 'data:text/csv;charset=utf-8,' + encodeURI(csv)
     downloadURI(uri, `baby_records_${getDateString(new Date())}.csv`)
   }
+
+  const onScroll = async () => {
+    const el = document.scrollingElement
+    if (!el) return
+
+    const { scrollTop, scrollHeight, clientHeight } = el
+    const rest = scrollHeight - scrollTop - window.innerHeight
+    if (rest < 300) {
+      await recordService.fetchRecords({ limit: 50 })
+      m.redraw()
+    }
+  }
   return {
     async oninit() {
       await Promise.all([
@@ -175,9 +187,12 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
         recordService.fetchCustomTypes(),
       ])
       window.scrollTo(0, scrollPosition)
+      window.addEventListener('scroll', onScroll)
     },
+
     onbeforeremove() {
       scrollPosition = window.scrollY || window.pageYOffset || 0
+      window.removeEventListener('scroll', onScroll)
     },
     view() {
       const { recordsFetched, records } = recordService
@@ -221,8 +236,16 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
                           '.chart-option',
                           {
                             class: dateRange === 7 ? 'is-selected' : '',
-                            onclick() {
+                            async onclick() {
                               dateRange = 7
+                              const additional = Math.max(
+                                0,
+                                7 * 20 - recordService.records.length,
+                              )
+                              await recordService.fetchRecords({
+                                limit: additional,
+                              })
+                              m.redraw()
                             },
                           },
                           '7-days',
@@ -231,12 +254,38 @@ export const StatisticsPage: m.FactoryComponent<StatisticsPageAttrs> = () => {
                           '.chart-option',
                           {
                             class: dateRange === 30 ? 'is-selected' : '',
-                            onclick() {
+                            async onclick() {
                               dateRange = 30
+                              const additional = Math.max(
+                                0,
+                                30 * 20 - recordService.records.length,
+                              )
+                              await recordService.fetchRecords({
+                                limit: additional,
+                              })
+                              m.redraw()
                             },
                           },
                           '30-days',
                         ),
+                        // m(
+                        //   '.chart-option',
+                        //   {
+                        //     class: dateRange === 365 ? 'is-selected' : '',
+                        //     async onclick() {
+                        //       dateRange = 365
+                        //       const additional = Math.max(
+                        //         0,
+                        //         5000 - recordService.records.length,
+                        //       )
+                        //       await recordService.fetchRecords({
+                        //         limit: additional,
+                        //       })
+                        //       m.redraw()
+                        //     },
+                        //   },
+                        //   '365-days',
+                        // ),
                       ]),
                       m(StatisticChart, {
                         dateRange: dateRange,

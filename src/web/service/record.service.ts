@@ -12,7 +12,9 @@ export const recordService = {
   //-------------- Records --------------
 
   records: [] as Record[],
+  recordsFetching: false,
   recordsFetched: false,
+  recordsFetchedAll: false,
   getDefaultAmount() {
     return 100
   },
@@ -44,16 +46,46 @@ export const recordService = {
     this.fetchRecords({ force: true }).catch((e) => console.error(e))
     m.redraw()
   },
-  async fetchRecords(options?: { force?: boolean }) {
-    const { force = false } = options || {}
-    if (this.recordsFetched && !force) {
+  async fetchRecords({ force = false, limit = 0 } = {}) {
+    if (this.recordsFetching) {
       return
     }
-    this.records = (await api.record.getMyRecords({})).sort(
-      (a, b) => b.time.getTime() - a.time.getTime(),
-    )
-    this.recordsFetched = true
-    m.redraw()
+    try {
+      this.recordsFetching = true
+
+      if (force) {
+        this.recordsFetchedAll = false
+        this.records = (
+          await api.record.getMyRecords({
+            skip: 0,
+            limit: limit || this.records.length,
+          })
+        ).sort((a, b) => b.time.getTime() - a.time.getTime())
+        this.recordsFetched = true
+        return
+      }
+      if (this.recordsFetchedAll) {
+        return
+      }
+      const skip = this.records.length
+
+      if (!limit && skip === 0) {
+        limit = 200
+      }
+      if (!limit) {
+        return
+      }
+      const next = await api.record.getMyRecords({ skip, limit })
+      if (next.length < limit) {
+        this.recordsFetchedAll = true
+      }
+      this.records = this.records.concat(next)
+      this.recordsFetched = true
+    } catch (e) {
+      throw e
+    } finally {
+      this.recordsFetching = false
+    }
   },
   async fetchSingleRecord(id: string) {
     const record = await api.record.getMyRecordById({ id })
@@ -70,7 +102,7 @@ export const recordService = {
     m.redraw()
   },
   async exportRecords() {
-    await recordService.fetchRecords()
+    await recordService.fetchRecords({ force: true, limit: 1e8 })
     const m = await import('papaparse')
     const csv = m.unparse(
       recordService.records.map((r) => {

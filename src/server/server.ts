@@ -7,7 +7,6 @@ import * as logger from 'koa-logger'
 import * as session from 'koa-session'
 import { config } from './config'
 import { error } from './middleware/error.middleware'
-import { fixRecord } from './migrate/fix_date'
 import { routes } from './router'
 import { sessionService } from './service/session.service'
 import { isDev, isTesting } from './utils/env'
@@ -80,7 +79,6 @@ export const quit = () => {
 if (!isTesting) {
   ;(async () => {
     try {
-      await fixRecord(false)
       await start()
     } catch (error) {
       panic(error)

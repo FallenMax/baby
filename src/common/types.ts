@@ -124,7 +124,7 @@ export type ApiSync = {
     changePassword(params: { password: string; newPassword: string }): void
   }
   record: {
-    getMyRecords(params: {}): Records.Record[]
+    getMyRecords(params: { skip?: number; limit?: number }): Records.Record[]
     getMyRecordById(params: { id: string }): Records.Record | undefined
     createRecord(record: Records.RecordDraft): Records.Record
     updateRecord(record: Records.RecordDraft & { id: string }): Records.Record

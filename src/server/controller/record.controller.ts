@@ -16,10 +16,13 @@ export const recordController: ApiWithContext['record'] = {
     return record
   },
 
-  async getMyRecords(_, ctx) {
+  async getMyRecords({ limit, skip }, ctx) {
     const user = await userService.getUserOrThrow(ctx)
-    const Records = await recordService.getRecords({ babyId: user.id })
-    return Records
+    const records = await recordService.getRecords(
+      { babyId: user.id },
+      { limit, skip },
+    )
+    return records
   },
 
   async getMyRecordById({ id }, ctx) {
