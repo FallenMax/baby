@@ -29,7 +29,7 @@ router.get(`/${config.publicPath}/:file*`, async (ctx: ExtendedContext) => {
 
 // pages
 router.get(
-  '/*',
+  '/(.*)',
   async (ctx: ExtendedContext, next: Router.Middleware<ExtendedContext>) => {
     await send(ctx, 'index.html', {
       root: config.publicDir,

@@ -1,8 +1,8 @@
 import * as crypto from 'crypto'
-import * as uuidv4 from 'uuid/v4'
+import * as uuid from 'uuid'
 
 export const generateUuid = (): string => {
-  return uuidv4()
+  return uuid.v4()
 }
 
 export const generateId = (length: number = 8): string => {
