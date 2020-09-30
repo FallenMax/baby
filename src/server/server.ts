@@ -33,6 +33,8 @@ export const start = () => {
         {
           key: 'baby:sess',
           maxAge: 1000 * 60 * 60 * 24 * 14, // 2 weeks
+          renew: true,
+          sameSite: true,
           store: {
             get: sessionService.get,
             set: sessionService.set,
