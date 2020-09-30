@@ -41,11 +41,11 @@ export const LandingPage: m.FactoryComponent = () => {
         replace: true,
       })
       if (type === 'new') {
-        setTimeout(function() {
+        setTimeout(function () {
           showToast('account created!')
         }, 0)
       } else {
-        setTimeout(function() {
+        setTimeout(function () {
           showToast('logged in!')
         }, 0)
       }
@@ -87,6 +87,7 @@ export const LandingPage: m.FactoryComponent = () => {
               'form.f-col#register-login',
               {
                 onsubmit(e) {
+                  console.log('e ', e)
                   e.preventDefault()
                   e.stopPropagation()
                 },
@@ -104,6 +105,14 @@ export const LandingPage: m.FactoryComponent = () => {
                     nameError = ''
                     name = (e.target as HTMLInputElement).value
                   },
+                  onsubmit() {
+                    onRegisterOrLogin()
+                  },
+                  onkeypress(e) {
+                    if (e.key === 'Enter') {
+                      onRegisterOrLogin()
+                    }
+                  },
                 }),
                 m(Field, {
                   id: 'password',
@@ -118,6 +127,14 @@ export const LandingPage: m.FactoryComponent = () => {
                   oninput(e) {
                     passwordError = ''
                     password = (e.target as HTMLInputElement).value
+                  },
+                  onkeypress(e) {
+                    if (e.key === 'Enter') {
+                      onRegisterOrLogin()
+                    }
+                  },
+                  onsubmit() {
+                    onRegisterOrLogin()
                   },
                 }),
                 m('.password-hint', 'to register, enter a new password'),
