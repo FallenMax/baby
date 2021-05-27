@@ -19,7 +19,7 @@ const panic = (e: any) => {
 }
 
 export const start = () => {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     console.info('--- start ---')
 
     const app = new Koa()

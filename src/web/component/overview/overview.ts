@@ -29,10 +29,10 @@ export const getOverview = (records: Records.Record[]): Overview => {
   let eatAmount = 0
   let sleepDurationMs = 0
   let isSleeping = false
-  let sleepStart: undefined | Date = undefined
+  let sleepStart: undefined | Date
   let pissCount = 0
   let poopCount = 0
-  let lastMeal: undefined | Date = undefined
+  let lastMeal: undefined | Date
   let customActivities: Overview['customActivities'] = {}
 
   const recordsToday = records
