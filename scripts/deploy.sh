@@ -1,33 +1,27 @@
-
 set -e
 
 target=$1
-host=root@47.105.215.74
+host=root@129.226.151.217
 port=22
-download_dir=/root/download
 
-if [ $target = 'dev' ]
-then
+if [ $target = 'dev' ]; then
   app_dir=/root/apps/baby_dev
   start_cmd="pm2 startOrRestart pm2_dev.json"
-elif [ $target = 'prod' ]
-then
+elif [ $target = 'prod' ]; then
   app_dir=/root/apps/baby
   start_cmd="pm2 startOrRestart pm2_prod.json"
 else
   echo 'unknown target'
-  exit -1
+  exit 1
 fi
 
 echo "deploying: $target"
-
 
 yarn
 yarn run lint
 # yarn run test
 
-
-ssh $host -p$port << EOF
+ssh $host -p$port <<EOF
   set -e
 
   echo 'updating...'
@@ -55,5 +49,3 @@ ssh $host -p$port << EOF
 EOF
 
 echo 'done deploy'
-
-
