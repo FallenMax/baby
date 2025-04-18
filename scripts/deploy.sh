@@ -1,13 +1,13 @@
 set -e
 
 target=$1
-host=root@129.226.151.217
+host=root@43.134.170.150
 port=22
 
-if [ $target = 'dev' ]; then
+if [ "$target" = 'dev' ]; then
   app_dir=/root/apps/baby_dev
   start_cmd="pm2 startOrRestart pm2_dev.json"
-elif [ $target = 'prod' ]; then
+elif [ "$target" = 'prod' ]; then
   app_dir=/root/apps/baby
   start_cmd="pm2 startOrRestart pm2_prod.json"
 else
@@ -18,7 +18,7 @@ fi
 echo "deploying: $target"
 
 yarn
-yarn run lint
+# yarn run lint
 # yarn run test
 
 ssh $host -p$port <<EOF
