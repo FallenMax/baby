@@ -1,3 +1,4 @@
+require('./polyfill')
 import * as cors from '@koa/cors'
 import * as http from 'http'
 import * as Koa from 'koa'
